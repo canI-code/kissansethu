@@ -1,0 +1,406 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "PM-KISAN Samman Nidhi",
+    "nameHi": "पीएम-किसान सम्मान निधि",
+    "description": "Direct income support of ₹6,000 per year in three installments to all landholding farmer families.",
+    "descriptionHi": "सभी भूमिधारी किसान परिवारों को तीन किस्तों में प्रति वर्ष ₹6,000 की प्रत्यक्ष आय सहायता।",
+    "benefits": "₹6,000/year (₹2,000 × 3 installments)",
+    "category": "income_support",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.01,
+      "maxIncome": null,
+      "aadhaarRequired": true,
+      "bankAccountRequired": true,
+      "excludeGovtEmployees": true,
+      "excludeTaxPayers": true,
+      "excludePensioners": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Bank Passbook", "Mobile Number"],
+    "applicationLink": "https://pmkisan.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "pmfby",
+    "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+    "nameHi": "प्रधानमंत्री फसल बीमा योजना",
+    "description": "Crop insurance scheme providing financial support to farmers suffering crop loss due to natural calamities.",
+    "descriptionHi": "प्राकृतिक आपदाओं से फसल हानि उठाने वाले किसानों को वित्तीय सहायता प्रदान करने वाली फसल बीमा योजना।",
+    "benefits": "Insurance coverage at 2% premium (Kharif), 1.5% (Rabi), 5% (Commercial/Horticulture)",
+    "category": "insurance",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.01,
+      "farmerTypes": ["all"],
+      "cropRequired": true,
+      "bankAccountRequired": true,
+      "aadhaarRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Bank Account", "Crop Sowing Certificate", "Photo"],
+    "applicationLink": "https://pmfby.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "kcc",
+    "name": "Kisan Credit Card (KCC)",
+    "nameHi": "किसान क्रेडिट कार्ड",
+    "description": "Provides farmers with timely access to credit for agriculture and allied activities at subsidized interest rates.",
+    "descriptionHi": "किसानों को कृषि और संबद्ध गतिविधियों के लिए रियायती ब्याज दरों पर समय पर ऋण प्रदान करता है।",
+    "benefits": "Credit up to ₹3 lakh at 4% interest (with subsidy), Crop + Personal Accident Insurance",
+    "category": "credit",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.01,
+      "farmerTypes": ["all"],
+      "aadhaarRequired": true,
+      "bankAccountRequired": true,
+      "ageMin": 18,
+      "ageMax": 75
+    },
+    "documentsRequired": ["Aadhaar Card", "PAN Card", "Land Records", "Passport Photo", "Bank Details"],
+    "applicationLink": "https://www.pmkisan.gov.in/KCCForm",
+    "ministry": "Department of Financial Services"
+  },
+  {
+    "id": "pm-kusum",
+    "name": "PM-KUSUM (Solar Pump Scheme)",
+    "nameHi": "पीएम-कुसुम (सौर पंप योजना)",
+    "description": "Promotion of solar energy in agriculture through solar pumps and grid-connected solar power plants.",
+    "descriptionHi": "सौर पंपों और ग्रिड-कनेक्टेड सौर ऊर्जा संयंत्रों के माध्यम से कृषि में सौर ऊर्जा को बढ़ावा।",
+    "benefits": "60% subsidy on solar pumps (30% Central + 30% State), up to 10 HP capacity",
+    "category": "subsidy",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.5,
+      "irrigationType": ["borewell", "tubewell", "open_well"],
+      "aadhaarRequired": true,
+      "bankAccountRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Bank Passbook", "Electricity Bill", "Water Source Proof"],
+    "applicationLink": "https://mnre.gov.in/solar/schemes/",
+    "ministry": "Ministry of New and Renewable Energy"
+  },
+  {
+    "id": "soil-health-card",
+    "name": "Soil Health Card Scheme",
+    "nameHi": "मृदा स्वास्थ्य कार्ड योजना",
+    "description": "Provides soil testing and health cards with crop-wise fertilizer recommendations to improve productivity.",
+    "descriptionHi": "उत्पादकता में सुधार के लिए मृदा परीक्षण और फसल-वार उर्वरक अनुशंसाओं के साथ स्वास्थ्य कार्ड प्रदान करता है।",
+    "benefits": "Free soil testing, Crop-wise fertilizer recommendations, Improved yield guidance",
+    "category": "advisory",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.01,
+      "farmerTypes": ["all"]
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records"],
+    "applicationLink": "https://soilhealth.dac.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "pmkmy",
+    "name": "PM Kisan Maandhan Yojana (Pension)",
+    "nameHi": "पीएम किसान मानधन योजना (पेंशन)",
+    "description": "Pension scheme for small and marginal farmers providing ₹3,000/month after age 60.",
+    "descriptionHi": "छोटे और सीमांत किसानों के लिए पेंशन योजना जो 60 वर्ष के बाद ₹3,000/माह प्रदान करती है।",
+    "benefits": "₹3,000/month pension after age 60, Contribution: ₹55-200/month based on entry age",
+    "category": "pension",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "maxLandAcres": 5,
+      "ageMin": 18,
+      "ageMax": 40,
+      "farmerTypes": ["marginal", "small"],
+      "aadhaarRequired": true,
+      "bankAccountRequired": true,
+      "excludeGovtEmployees": true,
+      "excludeTaxPayers": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Bank Passbook", "Land Records", "Age Proof"],
+    "applicationLink": "https://maandhan.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "enam",
+    "name": "e-NAM (National Agriculture Market)",
+    "nameHi": "ई-नाम (राष्ट्रीय कृषि बाजार)",
+    "description": "Online trading portal for agricultural produce, connecting APMC mandis across India.",
+    "descriptionHi": "कृषि उपज के लिए ऑनलाइन ट्रेडिंग पोर्टल, भारत भर में एपीएमसी मंडियों को जोड़ता है।",
+    "benefits": "Better price discovery, Transparent bidding, Direct buyer-seller connection",
+    "category": "market_access",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": false,
+      "farmerTypes": ["all"],
+      "bankAccountRequired": true,
+      "aadhaarRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Bank Details", "Mobile Number"],
+    "applicationLink": "https://enam.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "nmsa",
+    "name": "National Mission for Sustainable Agriculture (NMSA)",
+    "nameHi": "राष्ट्रीय टिकाऊ कृषि मिशन",
+    "description": "Promotes sustainable farming through water use efficiency, soil health management, and climate adaptation.",
+    "descriptionHi": "जल उपयोग दक्षता, मृदा स्वास्थ्य प्रबंधन और जलवायु अनुकूलन के माध्यम से टिकाऊ खेती को बढ़ावा।",
+    "benefits": "Subsidy on micro-irrigation (drip/sprinkler), Organic farming support, Rain water harvesting assistance",
+    "category": "subsidy",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.01,
+      "farmerTypes": ["all"],
+      "aadhaarRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Bank Passbook", "Farm Photo"],
+    "applicationLink": "https://nmsa.dac.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "sub-mission-agroforestry",
+    "name": "Sub-Mission on Agroforestry (SMAF)",
+    "nameHi": "कृषि वानिकी उप-मिशन",
+    "description": "Encourages planting trees on farm lands for additional income and environmental benefits.",
+    "descriptionHi": "अतिरिक्त आय और पर्यावरणीय लाभ के लिए कृषि भूमि पर वृक्षारोपण को प्रोत्साहित करता है।",
+    "benefits": "₹25,000/hectare for tree plantation, Free saplings, Technical guidance",
+    "category": "subsidy",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.5,
+      "farmerTypes": ["all"]
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Bank Passbook"],
+    "applicationLink": "https://agricoop.nic.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "rkvy",
+    "name": "Rashtriya Krishi Vikas Yojana (RKVY-RAFTAAR)",
+    "nameHi": "राष्ट्रीय कृषि विकास योजना",
+    "description": "Flexible funding for agricultural development and innovation to boost growth in agriculture sector.",
+    "descriptionHi": "कृषि क्षेत्र में विकास को बढ़ावा देने के लिए कृषि विकास और नवाचार हेतु लचीला वित्तपोषण।",
+    "benefits": "Project-based funding, Infrastructure development, Agri-entrepreneurship support up to ₹25 lakh",
+    "category": "infrastructure",
+    "eligibility": {
+      "citizenship": "indian",
+      "farmerTypes": ["all"],
+      "landRequired": false,
+      "agriEntrepreneur": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Business Plan", "Land/Lease Records", "Bank Details"],
+    "applicationLink": "https://rkvy.nic.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "pmjdy",
+    "name": "PM Jan Dhan Yojana",
+    "nameHi": "पीएम जन धन योजना",
+    "description": "Financial inclusion scheme providing zero-balance bank accounts with RuPay debit card and insurance.",
+    "descriptionHi": "रुपे डेबिट कार्ड और बीमा के साथ शून्य-शेष बैंक खाते प्रदान करने वाली वित्तीय समावेशन योजना।",
+    "benefits": "Zero balance account, RuPay card, ₹2 lakh accident insurance, ₹30,000 life cover, Overdraft up to ₹10,000",
+    "category": "financial_inclusion",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": false,
+      "ageMin": 10,
+      "aadhaarRequired": true,
+      "bankAccountRequired": false,
+      "farmerTypes": ["all"]
+    },
+    "documentsRequired": ["Aadhaar Card", "Address Proof", "Passport Photo"],
+    "applicationLink": "https://pmjdy.gov.in",
+    "ministry": "Ministry of Finance"
+  },
+  {
+    "id": "nfsm",
+    "name": "National Food Security Mission (NFSM)",
+    "nameHi": "राष्ट्रीय खाद्य सुरक्षा मिशन",
+    "description": "Increases production of rice, wheat, pulses, and coarse cereals through improved technologies.",
+    "descriptionHi": "उन्नत प्रौद्योगिकियों के माध्यम से चावल, गेहूं, दालों और मोटे अनाज का उत्पादन बढ़ाता है।",
+    "benefits": "Subsidized seeds, Free demonstrations, Farmer training, INR 500-10,000 incentives per hectare",
+    "category": "production",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.01,
+      "crops": ["rice", "wheat", "pulses", "millets", "nutri_cereals"],
+      "farmerTypes": ["all"]
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Bank Passbook"],
+    "applicationLink": "https://nfsm.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "pmjjby",
+    "name": "PM Jeevan Jyoti Bima Yojana",
+    "nameHi": "पीएम जीवन ज्योति बीमा योजना",
+    "description": "Life insurance scheme at ₹436/year premium providing ₹2 lakh life cover.",
+    "descriptionHi": "₹436/वर्ष प्रीमियम पर ₹2 लाख जीवन बीमा प्रदान करने वाली जीवन बीमा योजना।",
+    "benefits": "₹2 lakh life insurance at ₹436/year premium",
+    "category": "insurance",
+    "eligibility": {
+      "citizenship": "indian",
+      "ageMin": 18,
+      "ageMax": 50,
+      "bankAccountRequired": true,
+      "aadhaarRequired": true,
+      "landRequired": false,
+      "farmerTypes": ["all"]
+    },
+    "documentsRequired": ["Aadhaar Card", "Bank Passbook", "Nomination Form"],
+    "applicationLink": "https://jansuraksha.gov.in",
+    "ministry": "Ministry of Finance"
+  },
+  {
+    "id": "pmsby",
+    "name": "PM Suraksha Bima Yojana",
+    "nameHi": "पीएम सुरक्षा बीमा योजना",
+    "description": "Accident insurance scheme at just ₹20/year premium providing ₹2 lakh cover.",
+    "descriptionHi": "केवल ₹20/वर्ष प्रीमियम पर ₹2 लाख कवर प्रदान करने वाली दुर्घटना बीमा योजना।",
+    "benefits": "₹2 lakh accidental death/disability cover at ₹20/year",
+    "category": "insurance",
+    "eligibility": {
+      "citizenship": "indian",
+      "ageMin": 18,
+      "ageMax": 70,
+      "bankAccountRequired": true,
+      "aadhaarRequired": true,
+      "landRequired": false,
+      "farmerTypes": ["all"]
+    },
+    "documentsRequired": ["Aadhaar Card", "Bank Passbook"],
+    "applicationLink": "https://jansuraksha.gov.in",
+    "ministry": "Ministry of Finance"
+  },
+  {
+    "id": "agri-clinic",
+    "name": "Agri-Clinics & Agri-Business Centres (ACABC)",
+    "nameHi": "कृषि-क्लीनिक और कृषि-व्यापार केंद्र",
+    "description": "Supports agriculture graduates to set up agri-ventures with subsidized bank loans.",
+    "descriptionHi": "कृषि स्नातकों को अनुदानित बैंक ऋणों के साथ कृषि उद्यम स्थापित करने में सहायता।",
+    "benefits": "44% subsidy (36% general + 8% extra for women/SC/ST/NE), Training + handholding",
+    "category": "entrepreneurship",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": false,
+      "educationMin": "graduate_agriculture",
+      "aadhaarRequired": true,
+      "bankAccountRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Education Certificates", "Bank Details", "Project Report"],
+    "applicationLink": "https://acabcmis.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "micro-irrigation",
+    "name": "Per Drop More Crop (Micro Irrigation)",
+    "nameHi": "प्रति बूंद अधिक फसल (सूक्ष्म सिंचाई)",
+    "description": "Subsidizes drip and sprinkler irrigation systems to improve water use efficiency.",
+    "descriptionHi": "जल उपयोग दक्षता में सुधार के लिए ड्रिप और स्प्रिंकलर सिंचाई प्रणालियों पर सब्सिडी।",
+    "benefits": "55% subsidy (small/marginal farmers), 45% (others) on drip/sprinkler systems",
+    "category": "subsidy",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.01,
+      "waterSourceRequired": true,
+      "aadhaarRequired": true,
+      "bankAccountRequired": true,
+      "farmerTypes": ["all"]
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Bank Passbook", "Water Source Proof", "Quotation from Dealer"],
+    "applicationLink": "https://pmksy.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "organic-farming",
+    "name": "Paramparagat Krishi Vikas Yojana (PKVY)",
+    "nameHi": "परंपरागत कृषि विकास योजना",
+    "description": "Promotes organic farming through cluster-based approach with financial assistance.",
+    "descriptionHi": "वित्तीय सहायता के साथ क्लस्टर-आधारित दृष्टिकोण से जैविक खेती को बढ़ावा।",
+    "benefits": "₹50,000/hectare over 3 years for organic farming adoption, Certification support",
+    "category": "organic",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "minLandAcres": 0.5,
+      "maxLandAcres": 50,
+      "farmerTypes": ["all"],
+      "clusterRequired": true,
+      "aadhaarRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Group/Cluster Registration", "Bank Passbook"],
+    "applicationLink": "https://pgsindia-ncof.gov.in",
+    "ministry": "Ministry of Agriculture & Farmers Welfare"
+  },
+  {
+    "id": "animal-husbandry-infra",
+    "name": "Animal Husbandry Infrastructure Development Fund",
+    "nameHi": "पशुपालन अवसंरचना विकास निधि",
+    "description": "Interest subvention for dairy and meat processing infrastructure development.",
+    "descriptionHi": "डेयरी और मांस प्रसंस्करण अवसंरचना विकास के लिए ब्याज सबवेंशन।",
+    "benefits": "3% interest subvention on loans up to ₹2 crore, Credit guarantee up to ₹2 crore",
+    "category": "animal_husbandry",
+    "eligibility": {
+      "citizenship": "indian",
+      "farmerTypes": ["all"],
+      "landRequired": false,
+      "hasLivestock": true,
+      "bankAccountRequired": true,
+      "aadhaarRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Bank Details", "Project Report", "Land/Lease Documents"],
+    "applicationLink": "https://ahidf.udyamimitra.in",
+    "ministry": "Ministry of Fisheries, Animal Husbandry & Dairying"
+  },
+  {
+    "id": "gobardhan",
+    "name": "GOBARdhan (Waste to Wealth)",
+    "nameHi": "गोबरधन (कचरे से संपत्ति)",
+    "description": "Converts cattle dung and agricultural waste into biogas and bio-CNG.",
+    "descriptionHi": "पशु गोबर और कृषि अपशिष्ट को बायोगैस और बायो-सीएनजी में परिवर्तित करता है।",
+    "benefits": "Biogas plant subsidy, Additional income from bio-CNG, Organic fertilizer production",
+    "category": "waste_management",
+    "eligibility": {
+      "citizenship": "indian",
+      "farmerTypes": ["all"],
+      "landRequired": false,
+      "hasLivestock": true,
+      "aadhaarRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Livestock Ownership Proof", "Land/Location Details"],
+    "applicationLink": "https://sbm.gov.in/gbdw20/home/homepage",
+    "ministry": "Ministry of Jal Shakti"
+  },
+  {
+    "id": "free-boring",
+    "name": "Free Boring Scheme (UP)",
+    "nameHi": "निःशुल्क बोरिंग योजना (उ.प्र.)",
+    "description": "Free installation of borewells for small and marginal farmers in Uttar Pradesh.",
+    "descriptionHi": "उत्तर प्रदेश में छोटे और सीमांत किसानों के लिए मुफ्त बोरवेल स्थापना।",
+    "benefits": "Free borewell installation, Pump set subsidy for SC/ST farmers",
+    "category": "state_scheme",
+    "eligibility": {
+      "citizenship": "indian",
+      "landRequired": true,
+      "maxLandAcres": 5,
+      "states": ["Uttar Pradesh"],
+      "farmerTypes": ["marginal", "small"],
+      "aadhaarRequired": true,
+      "bankAccountRequired": true
+    },
+    "documentsRequired": ["Aadhaar Card", "Land Records", "Domicile Certificate", "Income Certificate", "Bank Passbook"],
+    "applicationLink": "https://minorirrigationup.gov.in",
+    "ministry": "Minor Irrigation Department, UP"
+  }
+]
