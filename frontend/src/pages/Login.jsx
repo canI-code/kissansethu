@@ -9,7 +9,7 @@ import {
   Alert,
 } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import PhoneInput from '../components/auth/PhoneInput';
 import OTPInput from '../components/auth/OTPInput';
 import RoleSelector from '../components/auth/RoleSelector';
@@ -105,7 +105,8 @@ const Login = () => {
   };
 
   // Only show the role step in the stepper for new users (step 2)
-  const visibleSteps = activeStep < 2 ? steps.slice(0, 2) : steps;
+  // Always show all 3 steps so users know role selection is part of the flow
+  const visibleSteps = steps;
 
   return (
     <Box
@@ -114,16 +115,16 @@ const Login = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         p: 2,
       }}
     >
       <Paper
         elevation={8}
-        sx={{ p: 4, width: '100%', maxWidth: 440, borderRadius: 2 }}
+        sx={{ p: 4, width: '100%', maxWidth: 440, borderRadius: 3, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1" gutterBottom color="primary">
+          <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#16a34a', fontWeight: 800 }}>
             🌾 KissanSetu
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -151,11 +152,28 @@ const Login = () => {
           <Typography variant="caption" color="text.secondary">
             Secure OTP verification • Your data is protected
           </Typography>
+          <Box sx={{ mt: 2, mb: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Don't have an account?{' '}
+              <Link to="/signup" style={{ color: '#16a34a', fontWeight: 600, textDecoration: 'none' }}>
+                Sign up here
+              </Link>
+            </Typography>
+          </Box>
           <Box sx={{ mt: 1, p: 1.5, bgcolor: '#f0fdf4', borderRadius: 2, border: '1px solid #bbf7d0' }}>
             <Typography variant="caption" color="success.dark" sx={{ fontWeight: 600 }}>
               🧪 Demo Mode — Enter any 6-digit code as OTP
             </Typography>
           </Box>
+          {activeStep === 0 && (
+            <Box sx={{ mt: 2, p: 2, bgcolor: '#fff8f0', borderRadius: 2, border: '1px solid #fed7aa', textAlign: 'left' }}>
+              <Typography variant="caption" sx={{ fontWeight: 700, color: '#c2410c', display: 'block', mb: 0.5 }}>
+                📋 After OTP you'll choose your role:
+              </Typography>
+              <Typography variant="caption" color="text.secondary" display="block">🌾 <b>Farmer</b> — rent equipment, hire workers, check schemes</Typography>
+              <Typography variant="caption" color="text.secondary" display="block">🔧 <b>Worker / Equipment Owner</b> — offer services to farmers</Typography>
+            </Box>
+          )}
         </Box>
       </Paper>
     </Box>

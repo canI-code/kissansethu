@@ -79,7 +79,22 @@ export default function Profile() {
   
   // Profile Modes: 'choose', 'voice-recording', 'analyzing', 'view', 'type'
   const [mode, setMode] = useState(user ? 'view' : 'choose');
-  const [extractedData, setExtractedData] = useState(null);
+
+  // Load farmer profile from user object (persisted in localStorage via AuthContext)
+  const loadFarmerProfile = () => {
+    const fp = user?.farmerProfile;
+    if (!fp) return null;
+    // Flatten nested location if present
+    return {
+      ...fp,
+      village: fp.village || fp.location?.village,
+      district: fp.district || fp.location?.district,
+      state: fp.state || fp.location?.state,
+      pincode: fp.pincode || fp.location?.pincode,
+    };
+  };
+
+  const [extractedData, setExtractedData] = useState(() => loadFarmerProfile());
   const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
 
@@ -94,7 +109,16 @@ export default function Profile() {
   const [expandedActivity, setExpandedActivity] = useState(null);
 
   // Worker profile state
-  const [workerData, setWorkerData] = useState(() => user?.workerProfile || null);
+  const [workerData, setWorkerData] = useState(() => {
+    const wp = user?.workerProfile;
+    if (!wp) return null;
+    return {
+      ...wp,
+      village: wp.village || wp.location?.village,
+      district: wp.district || wp.location?.district,
+      state: wp.state || wp.location?.state,
+    };
+  });
   const [workerMode, setWorkerMode] = useState('view'); // 'view', 'voice-recording', 'analyzing'
   const [workerSaving, setWorkerSaving] = useState(false);
   const [workerEditingField, setWorkerEditingField] = useState(null);
@@ -106,6 +130,29 @@ export default function Profile() {
   const [equipmentSaving, setEquipmentSaving] = useState(false);
   const [equipmentEditingField, setEquipmentEditingField] = useState(null);
   const [equipmentEditValue, setEquipmentEditValue] = useState('');
+
+  // Sync profile data when user object changes (e.g. after save/refresh)
+  useEffect(() => {
+    if (user?.farmerProfile) {
+      const fp = user.farmerProfile;
+      setExtractedData({
+        ...fp,
+        village: fp.village || fp.location?.village,
+        district: fp.district || fp.location?.district,
+        state: fp.state || fp.location?.state,
+        pincode: fp.pincode || fp.location?.pincode,
+      });
+    }
+    if (user?.workerProfile) {
+      const wp = user.workerProfile;
+      setWorkerData({
+        ...wp,
+        village: wp.village || wp.location?.village,
+        district: wp.district || wp.location?.district,
+        state: wp.state || wp.location?.state,
+      });
+    }
+  }, [user]);
 
   // Fetch bookings when dashboard loads
   useEffect(() => {
@@ -217,23 +264,45 @@ export default function Profile() {
   };
 
   const handleManualSave = async () => {
+    if (!user?._id || !extractedData) return;
     setSaving(true);
     setMode('analyzing');
-    // In a real app we'd construct the full object properly grouping location
-    const profileData = { ...extractedData };
-    
     try {
-      const res = await fetch(API.profile, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(profileData)
-      });
-      const result = await res.json();
-      saveFarmer(result);
-      setMode('view');
-      setActiveTab('dashboard'); // take them to dashboard after save
-      await voice.speak(t('प्रोफ़ाइल सेव हो गई!', 'Profile saved!'), lang);
+      // Build a clean farmer profile object
+      const profileData = {
+        name: extractedData.name,
+        age: extractedData.age,
+        gender: extractedData.gender,
+        location: {
+          village: extractedData.village,
+          district: extractedData.district,
+          state: extractedData.state,
+          pincode: extractedData.pincode,
+        },
+        village: extractedData.village,
+        district: extractedData.district,
+        state: extractedData.state,
+        pincode: extractedData.pincode,
+        landAcres: extractedData.landAcres,
+        irrigationType: extractedData.irrigationType,
+        crops: extractedData.crops,
+        annualIncome: extractedData.annualIncome,
+        familyMembers: extractedData.familyMembers,
+        hasAadhaar: extractedData.hasAadhaar,
+        hasBankAccount: extractedData.hasBankAccount,
+        hasLivestock: extractedData.hasLivestock,
+      };
+
+      const result = await updateProfile(user._id, 'farmer', profileData);
+      if (result.success) {
+        setMode('view');
+        setActiveTab('dashboard');
+        await voice.speak(t('प्रोफ़ाइल सेव हो गई!', 'Profile saved!'), lang);
+      } else {
+        setMode('view');
+      }
     } catch(e) {
+      console.error('Save error:', e);
       setMode('view');
     }
     setSaving(false);
