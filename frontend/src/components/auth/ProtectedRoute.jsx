@@ -31,7 +31,6 @@ const ProtectedRoute = ({ children }) => {
   if (!isPhoneVerified) {
     return <Navigate to="/profile" replace />;
   }
-
   return children;
 };
 

@@ -9,6 +9,7 @@ export const API = {
   bookings: `${API_BASE}/bookings`,
   tts: `${API_BASE}/tts`,
   health: `${API_BASE}/health`,
+  calling: `${API_BASE}/calling`,
 };
 
 export const EQUIPMENT_TYPES = [

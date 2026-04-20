@@ -18,12 +18,14 @@ export async function connectDB() {
     return db;
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error.message);
-    process.exit(1);
+    console.error('⚠️  Server will start without database. Set MONGODB_URI in .env to enable data features.');
+    // Don't exit — let the server run so other routes (health, calling status) still work
+    return null;
   }
 }
 
 export function getDB() {
-  if (!db) throw new Error('Database not connected. Call connectDB() first.');
+  if (!db) throw new Error('Database not connected. Set MONGODB_URI in .env and restart the server.');
   return db;
 }
 

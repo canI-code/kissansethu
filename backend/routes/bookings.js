@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { getDB } from '../config/db.js';
 import { ObjectId } from 'mongodb';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
 // Get bookings for a farmer
-router.get('/', async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
   try {
     const db = getDB();
     const { farmerId, status } = req.query;
@@ -50,7 +51,7 @@ router.get('/', async (req, res) => {
 });
 
 // Update booking status  
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireAuth, async (req, res) => {
   try {
     const db = getDB();
     const { status } = req.body;

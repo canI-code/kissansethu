@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff, Volume2 } from 'lucide-react';
+import { Send, Mic, MicOff, Volume2, Phone } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { useVoice } from '../hooks/useVoice';
@@ -19,11 +19,29 @@ export default function Assistant() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [callingStatus, setCallingStatus] = useState({ phoneNumber: '+17179310375', isOnline: false });
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Fetch calling agent status
+  useEffect(() => {
+    const fetchCallingStatus = async () => {
+      try {
+        const res = await fetch(`${API.calling}/status`);
+        const data = await res.json();
+        setCallingStatus({
+          phoneNumber: data.phoneNumber || '+17179310375',
+          isOnline: data.isOnline || false,
+        });
+      } catch (error) {
+        console.error('Failed to fetch calling status:', error);
+      }
+    };
+    fetchCallingStatus();
+  }, []);
 
   // Handle voice input
   useEffect(() => {
@@ -93,6 +111,48 @@ export default function Assistant() {
               {t('🟢 ऑनलाइन — हिंदी में बात करें', '🟢 Online — Chat in Hindi or English')}
             </div>
           </div>
+        </div>
+
+        {/* AI Calling Agent Info Banner */}
+        <div style={{
+          padding: '12px 20px',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '12px',
+          flexWrap: 'wrap',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Phone size={20} />
+            <div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>
+                {t('फ़ोन से भी बात करें', 'Call us too!')}
+              </div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>
+                {callingStatus.phoneNumber} {callingStatus.isOnline ? '🟢' : '🔴'}
+              </div>
+            </div>
+          </div>
+          <a
+            href={`tel:${callingStatus.phoneNumber}`}
+            style={{
+              padding: '6px 16px',
+              background: 'white',
+              color: '#667eea',
+              borderRadius: '8px',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <Phone size={14} />
+            {t('कॉल करें', 'Call')}
+          </a>
         </div>
 
         {/* Messages */}

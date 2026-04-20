@@ -2,11 +2,24 @@ import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// Lazy client — only instantiated when actually used so a missing key
+// doesn't crash the server at startup (other routes still work).
+let _groq = null;
+function getGroqClient() {
+  if (!_groq) {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      throw new Error('GROQ_API_KEY is not set in .env — AI features will not work.');
+    }
+    _groq = new Groq({ apiKey });
+  }
+  return _groq;
+}
 
 export async function askGroq(systemPrompt, userMessage, options = {}) {
   try {
-    const completion = await groq.chat.completions.create({
+    const client = getGroqClient();
+    const completion = await client.chat.completions.create({
       model: options.model || 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: systemPrompt },
@@ -23,4 +36,4 @@ export async function askGroq(systemPrompt, userMessage, options = {}) {
   }
 }
 
-export default groq;
+export default { askGroq };

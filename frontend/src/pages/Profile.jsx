@@ -14,6 +14,8 @@ import EventIcon from '@mui/icons-material/Event';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SecurityIcon from '@mui/icons-material/Security';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
+import WorkIcon from '@mui/icons-material/Work';
+import AgricultureIcon from '@mui/icons-material/Agriculture';
 
 import { useLang } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
@@ -43,9 +45,32 @@ const ALL_FIELDS = [
   { field: 'familyMembers', labelHi: 'परिवार', labelEn: 'Family', type: 'number', icon: '👨‍👩‍👧‍👦' },
 ];
 
+const WORKER_FIELDS = [
+  { field: 'name', labelHi: 'नाम', labelEn: 'Name', type: 'text', icon: '👤' },
+  { field: 'skills', labelHi: 'कौशल', labelEn: 'Skills', type: 'text', isArray: true, icon: '🛠️' },
+  { field: 'dailyRate', labelHi: 'दैनिक दर (₹)', labelEn: 'Daily Rate (₹)', type: 'number', icon: '💰' },
+  { field: 'experience', labelHi: 'अनुभव (साल)', labelEn: 'Experience (yrs)', type: 'number', icon: '📅' },
+  { field: 'village', labelHi: 'गाँव', labelEn: 'Village', type: 'text', icon: '🏡' },
+  { field: 'district', labelHi: 'जिला', labelEn: 'District', type: 'text', icon: '📍' },
+  { field: 'state', labelHi: 'राज्य', labelEn: 'State', type: 'text', icon: '🗺️' },
+  { field: 'bio', labelHi: 'परिचय', labelEn: 'Bio', type: 'text', icon: '📝' },
+];
+
+const EQUIPMENT_LISTING_FIELDS = [
+  { field: 'type', labelHi: 'उपकरण प्रकार', labelEn: 'Equipment Type', type: 'select', options: ['tractor', 'harvester', 'rotavator', 'sprayer', 'seeder', 'pump', 'thresher'], icon: '🚜' },
+  { field: 'name', labelHi: 'नाम / मॉडल', labelEn: 'Name / Model', type: 'text', icon: '🏷️' },
+  { field: 'condition', labelHi: 'हालत', labelEn: 'Condition', type: 'select', options: ['new', 'good', 'fair', 'poor'], icon: '⭐' },
+  { field: 'pricePerHour', labelHi: 'किराया (₹/घंटा)', labelEn: 'Price (₹/hr)', type: 'number', icon: '⏱️' },
+  { field: 'pricePerDay', labelHi: 'किराया (₹/दिन)', labelEn: 'Price (₹/day)', type: 'number', icon: '📆' },
+  { field: 'description', labelHi: 'विवरण', labelEn: 'Description', type: 'text', icon: '📝' },
+  { field: 'village', labelHi: 'गाँव', labelEn: 'Village', type: 'text', icon: '🏡' },
+  { field: 'district', labelHi: 'जिला', labelEn: 'District', type: 'text', icon: '📍' },
+  { field: 'state', labelHi: 'राज्य', labelEn: 'State', type: 'text', icon: '🗺️' },
+];
+
 export default function Profile() {
   const { lang, t } = useLang();
-  const { user } = useAuth();
+  const { user, activeRole, updateProfile, token } = useAuth();
   const voice = useVoice(lang);
   const activityVoice = useActivityVoice(lang);
 
@@ -68,6 +93,20 @@ export default function Profile() {
   const [loadingBookings, setLoadingBookings] = useState(false);
   const [expandedActivity, setExpandedActivity] = useState(null);
 
+  // Worker profile state
+  const [workerData, setWorkerData] = useState(() => user?.workerProfile || null);
+  const [workerMode, setWorkerMode] = useState('view'); // 'view', 'voice-recording', 'analyzing'
+  const [workerSaving, setWorkerSaving] = useState(false);
+  const [workerEditingField, setWorkerEditingField] = useState(null);
+  const [workerEditValue, setWorkerEditValue] = useState('');
+
+  // Equipment listing state (for equipment_owner role)
+  const [equipmentData, setEquipmentData] = useState(() => user?.equipmentProfile?.listing || null);
+  const [equipmentMode, setEquipmentMode] = useState('view'); // 'view', 'voice-recording', 'analyzing'
+  const [equipmentSaving, setEquipmentSaving] = useState(false);
+  const [equipmentEditingField, setEquipmentEditingField] = useState(null);
+  const [equipmentEditValue, setEquipmentEditValue] = useState('');
+
   // Fetch bookings when dashboard loads
   useEffect(() => {
     if (activeTab === 'dashboard' && user) {
@@ -80,7 +119,9 @@ export default function Profile() {
     try {
       // currently hardcoded to user 'user' or use user._id if available
       const userIdToUse = user._id || 'user';
-      const res = await fetch(`${API.bookings}?farmerId=${userIdToUse}`);
+      const res = await fetch(`${API.bookings}?farmerId=${userIdToUse}`, {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      });
       const data = await res.json();
       setBookings(data);
     } catch (e) {
@@ -184,7 +225,7 @@ export default function Profile() {
     try {
       const res = await fetch(API.profile, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(profileData)
       });
       const result = await res.json();
@@ -198,8 +239,385 @@ export default function Profile() {
     setSaving(false);
   };
 
+  // --- WORKER PROFILE VOICE FILL ---
+  const startWorkerVoiceRecording = async () => {
+    setWorkerMode('voice-recording');
+    voice.startListening();
+    await voice.speak(
+      t(
+        'अपना नाम, कौशल, दैनिक दर, स्थान और अपने बारे में बताइये।',
+        'Tell your name, skills, daily rate, location, and a bit about yourself.'
+      ),
+      lang
+    );
+  };
+
+  const stopWorkerRecordingAndParse = async () => {
+    const finalText = voice.stopListening();
+    if (!finalText || finalText.trim().length < 3) {
+      setWorkerMode('view');
+      return;
+    }
+    setWorkerMode('analyzing');
+    try {
+      const res = await fetch(`${API.ai}/parse-worker-profile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transcript: finalText, language: lang, existingProfile: workerData })
+      });
+      const parsed = await res.json();
+      if (parsed.error) { setWorkerMode('view'); return; }
+
+      // Flatten location fields for display
+      const flat = {
+        ...parsed,
+        village: parsed.location?.village || parsed.village,
+        district: parsed.location?.district || parsed.district,
+        state: parsed.location?.state || parsed.state,
+      };
+      setWorkerData(flat);
+      setWorkerMode('view');
+      await voice.speak(t('मैंने जानकारी अपडेट कर दी है।', 'I have updated the details.'), lang);
+    } catch (err) {
+      console.error('Worker profile parse error:', err);
+      setWorkerMode('view');
+    }
+  };
+
+  const saveWorkerProfile = async () => {
+    if (!user?._id || !workerData) return;
+    setWorkerSaving(true);
+    try {
+      const result = await updateProfile(user._id, 'worker', workerData);
+      if (result.success) {
+        await voice.speak(t('वर्कर प्रोफ़ाइल सेव हो गई!', 'Worker profile saved!'), lang);
+      }
+    } catch (err) {
+      console.error('Worker save error:', err);
+    }
+    setWorkerSaving(false);
+  };
+
+  const startWorkerFieldEdit = (fieldKey) => {
+    const fieldDef = WORKER_FIELDS.find(f => f.field === fieldKey);
+    const currentValue = workerData?.[fieldKey];
+    setWorkerEditingField(fieldKey);
+    setWorkerEditValue(fieldDef?.isArray && Array.isArray(currentValue) ? currentValue.join(', ') : (currentValue ?? ''));
+  };
+
+  const saveWorkerFieldEdit = () => {
+    if (!workerEditingField) return;
+    const fieldDef = WORKER_FIELDS.find(f => f.field === workerEditingField);
+    let value = workerEditValue;
+    if (fieldDef?.type === 'number') value = Number(value) || null;
+    if (fieldDef?.isArray) value = workerEditValue.split(',').map(s => s.trim()).filter(Boolean);
+    setWorkerData(prev => ({ ...(prev || {}), [workerEditingField]: value }));
+    setWorkerEditingField(null);
+  };
+
+  // --- EQUIPMENT LISTING VOICE FILL ---
+  const startEquipmentVoiceRecording = async () => {
+    setEquipmentMode('voice-recording');
+    voice.startListening();
+    await voice.speak(
+      t(
+        'उपकरण का प्रकार, हालत, किराया प्रति घंटा, और स्थान बताइये।',
+        'Tell the equipment type, condition, price per hour, and location.'
+      ),
+      lang
+    );
+  };
+
+  const stopEquipmentRecordingAndParse = async () => {
+    const finalText = voice.stopListening();
+    if (!finalText || finalText.trim().length < 3) {
+      setEquipmentMode('view');
+      return;
+    }
+    setEquipmentMode('analyzing');
+    try {
+      const res = await fetch(`${API.ai}/parse-equipment-listing`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transcript: finalText, language: lang, existingListing: equipmentData })
+      });
+      const parsed = await res.json();
+      if (parsed.error) { setEquipmentMode('view'); return; }
+
+      const flat = {
+        ...parsed,
+        village: parsed.location?.village || parsed.village,
+        district: parsed.location?.district || parsed.district,
+        state: parsed.location?.state || parsed.state,
+      };
+      setEquipmentData(flat);
+      setEquipmentMode('view');
+      await voice.speak(t('उपकरण की जानकारी अपडेट हो गई।', 'Equipment details updated.'), lang);
+    } catch (err) {
+      console.error('Equipment listing parse error:', err);
+      setEquipmentMode('view');
+    }
+  };
+
+  const saveEquipmentListing = async () => {
+    if (!user?._id || !equipmentData) return;
+    setEquipmentSaving(true);
+    try {
+      const result = await updateProfile(user._id, 'equipment_owner', { listing: equipmentData });
+      if (result.success) {
+        await voice.speak(t('उपकरण लिस्टिंग सेव हो गई!', 'Equipment listing saved!'), lang);
+      }
+    } catch (err) {
+      console.error('Equipment save error:', err);
+    }
+    setEquipmentSaving(false);
+  };
+
+  const startEquipmentFieldEdit = (fieldKey) => {
+    const fieldDef = EQUIPMENT_LISTING_FIELDS.find(f => f.field === fieldKey);
+    const currentValue = equipmentData?.[fieldKey];
+    setEquipmentEditingField(fieldKey);
+    setEquipmentEditValue(currentValue ?? '');
+  };
+
+  const saveEquipmentFieldEdit = () => {
+    if (!equipmentEditingField) return;
+    const fieldDef = EQUIPMENT_LISTING_FIELDS.find(f => f.field === equipmentEditingField);
+    let value = equipmentEditValue;
+    if (fieldDef?.type === 'number') value = Number(value) || null;
+    setEquipmentData(prev => ({ ...(prev || {}), [equipmentEditingField]: value }));
+    setEquipmentEditingField(null);
+  };
+
 
   // ===================== RENDERERS =====================
+
+  // Shared field grid renderer for worker/equipment profiles
+  const renderFieldGrid = (fields, data, editingField, editValue, onStartEdit, onSaveEdit, onChangeEdit) => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', width: '100%' }}>
+      {fields.map(f => {
+        const val = data?.[f.field];
+        const isMissing = val === undefined || val === null || val === '';
+        const displayVal = f.isArray && Array.isArray(val) ? val.join(', ') : val;
+        const isEditing = editingField === f.field;
+
+        return (
+          <div key={f.field} style={{
+            background: 'white',
+            border: `1px solid ${isMissing ? 'var(--amber-200)' : 'var(--slate-200)'}`,
+            borderRadius: '14px',
+            padding: '14px',
+            position: 'relative',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+              <div style={{ fontSize: '1.1rem' }}>{f.icon}</div>
+              {!isEditing && (
+                <button onClick={() => onStartEdit(f.field)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px' }}>
+                  <EditIcon style={{ fontSize: '1rem' }} />
+                </button>
+              )}
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+              {lang === 'hi' ? f.labelHi : f.labelEn}
+            </div>
+            {isEditing ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '6px' }}>
+                {f.type === 'select' ? (
+                  <select className="form-input" value={editValue} onChange={e => onChangeEdit(e.target.value)} style={{ padding: '4px', fontSize: '0.9rem' }}>
+                    <option value="">--</option>
+                    {f.options.map(o => <option key={o} value={o}>{o}</option>)}
+                  </select>
+                ) : (
+                  <input type={f.type === 'number' ? 'number' : 'text'} autoFocus className="form-input"
+                    style={{ padding: '4px 8px', fontSize: '0.9rem' }} value={editValue}
+                    onChange={e => onChangeEdit(e.target.value)} />
+                )}
+                <button className="btn btn-primary" style={{ padding: '4px' }} onClick={onSaveEdit}>
+                  <CheckIcon fontSize="small" /> {t('सेव', 'Save')}
+                </button>
+              </div>
+            ) : (
+              <div style={{
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                color: isMissing ? 'var(--amber-600)' : 'var(--slate-800)',
+                wordBreak: 'break-word'
+              }}>
+                {isMissing ? t('खाली है', 'Empty') : String(displayVal)}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  // Worker profile section
+  const renderWorkerSection = () => {
+    if (workerMode === 'analyzing') {
+      return (
+        <div style={{ textAlign: 'center', padding: '32px 0' }}>
+          <div className="loading-spinner" />
+          <p style={{ marginTop: '16px', color: 'var(--text-secondary)' }}>{t('🤖 AI समझ रहा है...', '🤖 AI is analyzing...')}</p>
+        </div>
+      );
+    }
+
+    if (workerMode === 'voice-recording') {
+      return (
+        <div style={{ textAlign: 'center', padding: '24px 0' }}>
+          <MicIcon style={{ fontSize: '3rem', color: 'var(--green-600)', animation: 'float 2s ease-in-out infinite' }} />
+          <h3 style={{ margin: '12px 0 8px', fontSize: '1.1rem' }}>
+            {t('बोलिए — नाम, कौशल, दर, स्थान...', 'Speak — name, skills, rate, location...')}
+          </h3>
+          {voice.isListening && (
+            <div className="waveform" style={{ justifyContent: 'center', margin: '12px 0' }}>
+              {[...Array(7)].map((_, i) => <div key={i} className="bar" />)}
+            </div>
+          )}
+          <div style={{ minHeight: '60px', margin: '12px 0', padding: '12px', background: 'var(--green-50)', borderRadius: '10px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            {voice.transcript || '...'}
+          </div>
+          <button className="btn btn-danger btn-full" onClick={stopWorkerRecordingAndParse}>
+            <MicOffIcon /> {t('हो गया — अब जांचें', 'Done — Analyze')}
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        {/* Action bar */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+          <button className="btn btn-primary" style={{ flex: 1, padding: '10px' }} onClick={startWorkerVoiceRecording}>
+            <MicIcon fontSize="small" /> {t('आवाज से भरें', 'Fill with Voice')}
+          </button>
+          <button className="btn btn-secondary" style={{ flex: 1, padding: '10px' }} onClick={saveWorkerProfile} disabled={workerSaving || !workerData}>
+            <CheckIcon fontSize="small" /> {workerSaving ? '...' : t('सेव करें', 'Save')}
+          </button>
+        </div>
+
+        {/* Availability toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', border: '1px solid var(--slate-200)', borderRadius: '14px', padding: '14px', marginBottom: '14px' }}>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{t('उपलब्धता', 'Availability')}</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              {workerData?.available ? t('✅ उपलब्ध हूँ', '✅ Available') : t('🔴 अभी व्यस्त हूँ', '🔴 Currently Busy')}
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              className={`btn ${workerData?.available === true ? 'btn-primary' : 'btn-secondary'}`}
+              style={{ padding: '6px 14px' }}
+              onClick={() => setWorkerData(prev => ({ ...(prev || {}), available: true }))}
+            >
+              {t('उपलब्ध', 'Available')}
+            </button>
+            <button
+              className={`btn ${workerData?.available === false ? 'btn-danger' : 'btn-secondary'}`}
+              style={{ padding: '6px 14px' }}
+              onClick={() => setWorkerData(prev => ({ ...(prev || {}), available: false }))}
+            >
+              {t('व्यस्त', 'Busy')}
+            </button>
+          </div>
+        </div>
+
+        {renderFieldGrid(
+          WORKER_FIELDS, workerData,
+          workerEditingField, workerEditValue,
+          startWorkerFieldEdit, saveWorkerFieldEdit,
+          (v) => setWorkerEditValue(v)
+        )}
+      </div>
+    );
+  };
+
+  // Equipment listing section
+  const renderEquipmentSection = () => {
+    if (equipmentMode === 'analyzing') {
+      return (
+        <div style={{ textAlign: 'center', padding: '32px 0' }}>
+          <div className="loading-spinner" />
+          <p style={{ marginTop: '16px', color: 'var(--text-secondary)' }}>{t('🤖 AI समझ रहा है...', '🤖 AI is analyzing...')}</p>
+        </div>
+      );
+    }
+
+    if (equipmentMode === 'voice-recording') {
+      return (
+        <div style={{ textAlign: 'center', padding: '24px 0' }}>
+          <MicIcon style={{ fontSize: '3rem', color: 'var(--green-600)', animation: 'float 2s ease-in-out infinite' }} />
+          <h3 style={{ margin: '12px 0 8px', fontSize: '1.1rem' }}>
+            {t('बोलिए — उपकरण, हालत, किराया, स्थान...', 'Speak — equipment, condition, price, location...')}
+          </h3>
+          {voice.isListening && (
+            <div className="waveform" style={{ justifyContent: 'center', margin: '12px 0' }}>
+              {[...Array(7)].map((_, i) => <div key={i} className="bar" />)}
+            </div>
+          )}
+          <div style={{ minHeight: '60px', margin: '12px 0', padding: '12px', background: 'var(--green-50)', borderRadius: '10px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            {voice.transcript || '...'}
+          </div>
+          <button className="btn btn-danger btn-full" onClick={stopEquipmentRecordingAndParse}>
+            <MicOffIcon /> {t('हो गया — अब जांचें', 'Done — Analyze')}
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        {/* Action bar */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+          <button className="btn btn-primary" style={{ flex: 1, padding: '10px' }} onClick={startEquipmentVoiceRecording}>
+            <MicIcon fontSize="small" /> {t('आवाज से भरें', 'Fill with Voice')}
+          </button>
+          <button className="btn btn-secondary" style={{ flex: 1, padding: '10px' }} onClick={saveEquipmentListing} disabled={equipmentSaving || !equipmentData}>
+            <CheckIcon fontSize="small" /> {equipmentSaving ? '...' : t('सेव करें', 'Save')}
+          </button>
+        </div>
+
+        {/* Rent / Sale toggles */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '14px' }}>
+          <div style={{ flex: 1, background: 'white', border: '1px solid var(--slate-200)', borderRadius: '14px', padding: '12px' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>{t('किराये पर देना है?', 'Available for Rent?')}</div>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <button className={`btn ${equipmentData?.availableForRent === true ? 'btn-primary' : 'btn-secondary'}`} style={{ flex: 1, padding: '5px' }}
+                onClick={() => setEquipmentData(prev => ({ ...(prev || {}), availableForRent: true }))}>
+                {t('हाँ', 'Yes')}
+              </button>
+              <button className={`btn ${equipmentData?.availableForRent === false ? 'btn-danger' : 'btn-secondary'}`} style={{ flex: 1, padding: '5px' }}
+                onClick={() => setEquipmentData(prev => ({ ...(prev || {}), availableForRent: false }))}>
+                {t('नहीं', 'No')}
+              </button>
+            </div>
+          </div>
+          <div style={{ flex: 1, background: 'white', border: '1px solid var(--slate-200)', borderRadius: '14px', padding: '12px' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>{t('बेचना है?', 'Available for Sale?')}</div>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <button className={`btn ${equipmentData?.availableForSale === true ? 'btn-primary' : 'btn-secondary'}`} style={{ flex: 1, padding: '5px' }}
+                onClick={() => setEquipmentData(prev => ({ ...(prev || {}), availableForSale: true }))}>
+                {t('हाँ', 'Yes')}
+              </button>
+              <button className={`btn ${equipmentData?.availableForSale === false ? 'btn-danger' : 'btn-secondary'}`} style={{ flex: 1, padding: '5px' }}
+                onClick={() => setEquipmentData(prev => ({ ...(prev || {}), availableForSale: false }))}>
+                {t('नहीं', 'No')}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {renderFieldGrid(
+          EQUIPMENT_LISTING_FIELDS, equipmentData,
+          equipmentEditingField, equipmentEditValue,
+          startEquipmentFieldEdit, saveEquipmentFieldEdit,
+          (v) => setEquipmentEditValue(v)
+        )}
+      </div>
+    );
+  };
 
   const renderTabs = () => (
     <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: 'var(--slate-100)', padding: '6px', borderRadius: '16px' }}>
@@ -508,6 +926,36 @@ export default function Profile() {
             })}
           </div>
         </>
+      )}
+
+      {/* Worker Profile Section — shown when user has worker role */}
+      {user && (activeRole === 'worker' || user?.roles?.includes('worker')) && (
+        <div style={{ marginTop: '32px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <WorkIcon style={{ color: 'var(--green-600)', fontSize: '1.5rem' }} />
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
+              {t('वर्कर प्रोफ़ाइल', 'Worker Profile')}
+            </h3>
+          </div>
+          <div style={{ background: 'linear-gradient(to right, rgba(34,197,94,0.08), rgba(16,185,129,0.08))', borderRadius: '16px', padding: '16px' }}>
+            {renderWorkerSection()}
+          </div>
+        </div>
+      )}
+
+      {/* Equipment Listing Section — shown when user has equipment_owner role */}
+      {user && (activeRole === 'equipment_owner' || user?.roles?.includes('equipment_owner')) && (
+        <div style={{ marginTop: '32px', marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <AgricultureIcon style={{ color: 'var(--green-600)', fontSize: '1.5rem' }} />
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
+              {t('उपकरण लिस्टिंग', 'Equipment Listing')}
+            </h3>
+          </div>
+          <div style={{ background: 'linear-gradient(to right, rgba(59,130,246,0.08), rgba(99,102,241,0.08))', borderRadius: '16px', padding: '16px' }}>
+            {renderEquipmentSection()}
+          </div>
+        </div>
       )}
 
     </div>

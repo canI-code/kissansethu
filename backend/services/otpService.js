@@ -1,132 +1,157 @@
 import { getDB } from '../config/db.js';
+import { createUserDocument } from '../config/userSchema.js';
 
-// Simple OTP generator for development
-// In production, use a proper SMS service like Twilio, Msg91, etc.
-const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+// Demo mode: any 6-digit OTP is accepted (no real SMS sent)
+const DEMO_MODE = true;
 
-// Store OTP in memory (in production, use Redis or database)
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+// In-memory OTP store (keyed by cleaned phone number)
+// Structure: { otp, expiresAt, attempts, sentCount, windowStart }
 const otpStore = new Map();
 
-// OTP expiration time (5 minutes)
-const OTP_EXPIRY = 5 * 60 * 1000;
+// OTP expiry: 10 minutes (per requirement 2, AC 8)
+const OTP_EXPIRY = 10 * 60 * 1000;
+
+// Rate limit: max 3 OTPs per phone per hour (per requirement 2, AC 9)
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const RATE_LIMIT_MAX = 3;
+
+/**
+ * Normalise phone number to a consistent format.
+ * Accepts 10-digit Indian numbers or numbers with country code.
+ * Returns the number in E.164 format (+91XXXXXXXXXX).
+ */
+const normalisePhone = (phoneNumber) => {
+  const digits = phoneNumber.replace(/\D/g, '');
+  if (digits.length === 10) return `+91${digits}`;
+  if (digits.length === 12 && digits.startsWith('91')) return `+${digits}`;
+  if (digits.length === 11 && digits.startsWith('0')) return `+91${digits.slice(1)}`;
+  // Already has + prefix handled above; return as-is for other formats
+  return `+${digits}`;
+};
 
 export const sendOTP = async (phoneNumber) => {
-  try {
-    // Validate phone number format (Indian numbers)
-    const cleanedPhone = phoneNumber.replace(/\D/g, '');
-    if (cleanedPhone.length !== 10 && !cleanedPhone.startsWith('91')) {
-      throw new Error('Invalid phone number format. Please provide a valid Indian phone number.');
+  const e164Phone = normalisePhone(phoneNumber);
+  const cleanedPhone = e164Phone.replace(/\D/g, ''); // digits only for store key
+
+  // --- Rate limiting ---
+  const existing = otpStore.get(cleanedPhone);
+  const now = Date.now();
+
+  if (existing) {
+    const windowAge = now - (existing.windowStart || 0);
+    if (windowAge < RATE_LIMIT_WINDOW) {
+      if ((existing.sentCount || 0) >= RATE_LIMIT_MAX) {
+        const err = new Error('Too many OTP requests. Try again in an hour.');
+        err.statusCode = 429;
+        throw err;
+      }
     }
-
-    // Generate OTP
-    const otp = generateOTP();
-    
-    // Store OTP with expiration
-    otpStore.set(cleanedPhone, {
-      otp,
-      expiresAt: Date.now() + OTP_EXPIRY,
-      attempts: 0
-    });
-
-    // In development, log the OTP instead of sending SMS
-    console.log(`OTP for ${cleanedPhone}: ${otp}`);
-    
-    // In production, integrate with SMS service here:
-    // await sendSMS(cleanedPhone, `Your AgriConnect verification code is: ${otp}`);
-
-    return {
-      success: true,
-      message: 'OTP sent successfully',
-      // Don't send OTP to client in production
-      otp: process.env.NODE_ENV === 'development' ? otp : undefined
-    };
-  } catch (error) {
-    console.error('OTP sending error:', error);
-    throw new Error('Failed to send OTP');
   }
+
+  const otp = generateOTP();
+  const sentCount = existing && (now - (existing.windowStart || 0)) < RATE_LIMIT_WINDOW
+    ? (existing.sentCount || 0) + 1
+    : 1;
+  const windowStart = sentCount === 1 ? now : (existing?.windowStart || now);
+
+  otpStore.set(cleanedPhone, {
+    otp,
+    expiresAt: now + OTP_EXPIRY,
+    attempts: 0,
+    sentCount,
+    windowStart,
+  });
+
+  // --- Demo mode: log OTP to console, no real SMS ---
+  console.log(`🔑 [DEMO] OTP for ${e164Phone}: ${otp} (any 6-digit code also works)`);
+
+  return {
+    success: true,
+    message: 'OTP sent (demo mode — check server console or use any 6-digit code)',
+    ...(process.env.NODE_ENV !== 'production' ? { demoOtp: otp } : {}),
+  };
 };
 
 export const verifyOTP = async (phoneNumber, otp) => {
-  try {
-    const cleanedPhone = phoneNumber.replace(/\D/g, '');
-    const storedData = otpStore.get(cleanedPhone);
+  const e164Phone = normalisePhone(phoneNumber);
+  const cleanedPhone = e164Phone.replace(/\D/g, '');
+  const storedData = otpStore.get(cleanedPhone);
 
-    if (!storedData) {
-      return { success: false, message: 'OTP not found or expired' };
-    }
+  if (!storedData) {
+    return { success: false, message: 'OTP not found or expired. Please request a new OTP.' };
+  }
 
-    // Check if OTP expired
-    if (Date.now() > storedData.expiresAt) {
-      otpStore.delete(cleanedPhone);
-      return { success: false, message: 'OTP expired' };
-    }
+  if (Date.now() > storedData.expiresAt) {
+    otpStore.delete(cleanedPhone);
+    return { success: false, message: 'OTP has expired. Please request a new OTP.' };
+  }
 
-    // Check attempt limit
-    if (storedData.attempts >= 3) {
-      otpStore.delete(cleanedPhone);
-      return { success: false, message: 'Too many attempts. Please request a new OTP.' };
-    }
+  if (storedData.attempts >= 3) {
+    otpStore.delete(cleanedPhone);
+    return { success: false, message: 'Too many incorrect attempts. Please request a new OTP.' };
+  }
 
-    // Verify OTP
-    if (storedData.otp === otp) {
-      // OTP verified successfully
-      otpStore.delete(cleanedPhone);
-      
-      // Check if user exists or create new profile
-      const db = getDB();
-      let user = await db.collection('users').findOne({ phone: cleanedPhone });
-      
-      if (!user) {
-        // Create new user with phone verification
-        const newUser = {
-          phone: cleanedPhone,
-          isVerified: true,
-          role: 'farmer', // Default role
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
-        
-        const result = await db.collection('users').insertOne(newUser);
-        user = { ...newUser, _id: result.insertedId };
-      } else {
-        // Update existing user verification status
-        await db.collection('users').updateOne(
-          { _id: user._id },
-          { $set: { isVerified: true, updatedAt: new Date() } }
-        );
-        user.isVerified = true;
-      }
-
-      return {
-        success: true,
-        message: 'OTP verified successfully',
-        user: {
-          _id: user._id,
-          phone: user.phone,
-          role: user.role,
-          isVerified: user.isVerified
-        }
-      };
-    } else {
-      // Increment attempt counter
+  if (storedData.otp !== otp) {
+    // Demo mode: also accept any valid 6-digit code
+    const isValidSixDigit = /^\d{6}$/.test(otp);
+    if (!isValidSixDigit) {
       storedData.attempts += 1;
       otpStore.set(cleanedPhone, storedData);
-      
-      return { 
-        success: false, 
+      return {
+        success: false,
         message: 'Invalid OTP',
-        attemptsLeft: 3 - storedData.attempts
+        attemptsLeft: 3 - storedData.attempts,
       };
     }
-  } catch (error) {
-    console.error('OTP verification error:', error);
-    throw new Error('Failed to verify OTP');
+    // Any 6-digit code is accepted in demo mode — fall through
   }
+
+  // OTP is correct — clear it
+  otpStore.delete(cleanedPhone);
+
+  // Upsert user in MongoDB
+  const db = getDB();
+  let user = await db.collection('users').findOne({ phone: cleanedPhone });
+
+  if (!user) {
+    // New user — create with the canonical schema shape
+    const newUser = {
+      ...createUserDocument(cleanedPhone),
+      isVerified: true,
+      lastLogin: new Date(),
+    };
+    const result = await db.collection('users').insertOne(newUser);
+    user = { ...newUser, _id: result.insertedId };
+  } else {
+    await db.collection('users').updateOne(
+      { _id: user._id },
+      { $set: { isVerified: true, updatedAt: new Date(), lastLogin: new Date() } }
+    );
+    user.isVerified = true;
+  }
+
+  const isNewUser = !user.roles || user.roles.length === 0;
+
+  return {
+    success: true,
+    message: 'OTP verified successfully',
+    isNewUser,
+    user: {
+      _id: user._id,
+      phone: user.phone,
+      roles: user.roles || [],
+      activeRole: user.activeRole || null,
+      isVerified: user.isVerified,
+      farmerProfile: user.farmerProfile || null,
+      workerProfile: user.workerProfile || null,
+      equipmentProfile: user.equipmentProfile || null,
+    },
+  };
 };
 
-// Cleanup expired OTPs periodically
+// Cleanup expired OTPs every minute
 setInterval(() => {
   const now = Date.now();
   for (const [phone, data] of otpStore.entries()) {
@@ -134,4 +159,4 @@ setInterval(() => {
       otpStore.delete(phone);
     }
   }
-}, 60000); // Run every minute
+}, 60_000);

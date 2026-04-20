@@ -3,6 +3,7 @@ import { MapPin, Star, Search, Mic, Phone, Clock, Award } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { API, WORKER_SKILLS } from '../config/constants';
 import { useVoice } from '../hooks/useVoice';
+import SpeakableCard from '../components/voice/SpeakableCard';
 
 export default function Workers() {
   const { lang, t } = useLang();
@@ -97,7 +98,20 @@ export default function Workers() {
       ) : (
         <div className="grid-3">
           {workers.map(worker => (
-            <div key={worker._id} className="listing-card" onClick={() => setSelectedWorker(worker)}>
+            <SpeakableCard
+              key={worker._id}
+              textContent={[
+                lang === 'hi' ? worker.nameHi : worker.name,
+                lang === 'hi' ? worker.bioHi : worker.bio,
+                `कौशल: ${(lang === 'hi' ? worker.skillsHi : worker.skills)?.join(', ')}`,
+                `दैनिक दर: ${worker.dailyRate} रुपये प्रति दिन`,
+                `स्थान: ${worker.location?.district}`,
+                `अनुभव: ${worker.experience} साल`,
+                worker.available ? 'अभी उपलब्ध है' : 'अभी व्यस्त है'
+              ].filter(Boolean).join('. ')}
+              onClick={() => setSelectedWorker(worker)}
+            >
+            <div className="listing-card">
               <div className="card-emoji" style={{ 
                 background: worker.available 
                   ? 'linear-gradient(135deg, var(--green-50), var(--green-100))' 
@@ -142,6 +156,7 @@ export default function Workers() {
                 </div>
               </div>
             </div>
+            </SpeakableCard>
           ))}
         </div>
       )}

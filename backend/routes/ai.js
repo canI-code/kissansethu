@@ -154,7 +154,7 @@ router.post('/smart-voice', async (req, res) => {
     }
     else if (intent === 'navigate_home') {
       action = 'navigate';
-      route = '/';
+      route = '/home';
     }
     else if (intent === 'ask_question') {
       action = 'chat';
@@ -307,6 +307,117 @@ Return ONLY the sentence, no other text, no quotes.`;
   } catch(error) {
     console.error('Activity describe error:', error);
     res.status(500).json({ error: 'Failed to describe activity' });
+  }
+});
+
+// Parse worker profile from voice dump
+router.post('/parse-worker-profile', async (req, res) => {
+  try {
+    const { transcript, language, existingProfile } = req.body;
+    if (!transcript) return res.status(400).json({ error: 'Transcript is required' });
+
+    const systemPrompt = `You are parsing a worker's voice recording into a structured profile for an Indian farming platform. The worker speaks in Hindi, English, or Hinglish. Extract ONLY factual information actually mentioned.
+
+EXTRACTION RULES:
+1. **name**: Full name, capitalize properly. Ignore "mera naam", "I am", etc.
+2. **skills**: Array of skills. Common: jotai/ploughing, buwai/sowing, katai/harvesting, chhidkav/spraying, tractor chalana/tractor_operation, sinchai/irrigation, general. Translate to English skill IDs.
+3. **dailyRate**: Daily wage in rupees. Extract from "X rupaye roz", "X per day", "X daily". Number only.
+4. **experience**: Years of experience. Extract from "X saal ka anubhav", "X years experience". Number only.
+5. **location**: Extract village, district, state separately.
+6. **bio**: A short summary of what the worker said about themselves. 1-2 sentences max.
+7. **available**: true if they say "available hoon", "kaam chahiye", "free hoon". false if "busy hoon", "kaam hai". null if not mentioned.
+
+IMPORTANT: Only extract what was actually said. Leave fields as null if not mentioned.
+${existingProfile ? `\nEXISTING PROFILE (do NOT overwrite non-null fields):\n${JSON.stringify(existingProfile, null, 2)}` : ''}
+
+Return pure JSON (no markdown):
+{
+  "name": "string or null",
+  "skills": ["array of skill strings"] or [],
+  "dailyRate": number_or_null,
+  "experience": number_or_null,
+  "location": { "village": "string or null", "district": "string or null", "state": "string or null" },
+  "bio": "string or null",
+  "available": boolean_or_null,
+  "extractedFields": ["list of fields successfully extracted"],
+  "missingFields": ["list of important fields NOT mentioned"]
+}`;
+
+    const response = await askGroq(systemPrompt, `Worker's recording (${language === 'hi' ? 'Hindi' : 'English'}): "${transcript}"`, { json: true, temperature: 0.1 });
+    let parsed = JSON.parse(response);
+
+    // Strict merge: preserve existing non-null fields
+    if (existingProfile) {
+      for (const key in existingProfile) {
+        const existing = existingProfile[key];
+        if (existing !== null && existing !== undefined && existing !== '' &&
+            !(Array.isArray(existing) && existing.length === 0)) {
+          parsed[key] = existing;
+        }
+      }
+    }
+
+    res.json(parsed);
+  } catch (error) {
+    console.error('Worker profile parse error:', error);
+    res.status(500).json({ error: 'Worker profile parsing failed', details: error.message });
+  }
+});
+
+// Parse equipment listing from voice dump
+router.post('/parse-equipment-listing', async (req, res) => {
+  try {
+    const { transcript, language, existingListing } = req.body;
+    if (!transcript) return res.status(400).json({ error: 'Transcript is required' });
+
+    const systemPrompt = `You are parsing an equipment owner's voice recording into a structured equipment listing for an Indian farming platform. The owner speaks in Hindi, English, or Hinglish. Extract ONLY factual information actually mentioned.
+
+EXTRACTION RULES:
+1. **type**: Equipment type. Map to one of: tractor, harvester, rotavator, sprayer, seeder, pump, thresher. Use closest match.
+2. **name**: Equipment name/model. E.g. "Mahindra 575 DI", "John Deere 5050D".
+3. **condition**: "new", "good", "fair", or "poor". Map from: naya=new, achha=good, theek=fair, kharab=poor.
+4. **pricePerHour**: Hourly rental price in rupees. Extract from "X rupaye ghante", "X per hour". Number only.
+5. **pricePerDay**: Daily rental price in rupees. Extract from "X rupaye roz", "X per day". Number only.
+6. **description**: Brief description of the equipment in English. 1-2 sentences.
+7. **location**: Extract village, district, state separately.
+8. **availableForRent**: true if they say "kiraye pe dena hai", "rent pe dena". false if not available for rent.
+9. **availableForSale**: true if they say "bechna hai", "sale karna hai". false otherwise.
+
+IMPORTANT: Only extract what was actually said. Leave fields as null if not mentioned.
+${existingListing ? `\nEXISTING LISTING (do NOT overwrite non-null fields):\n${JSON.stringify(existingListing, null, 2)}` : ''}
+
+Return pure JSON (no markdown):
+{
+  "type": "string or null",
+  "name": "string or null",
+  "condition": "new|good|fair|poor|null",
+  "pricePerHour": number_or_null,
+  "pricePerDay": number_or_null,
+  "description": "string or null",
+  "location": { "village": "string or null", "district": "string or null", "state": "string or null" },
+  "availableForRent": boolean_or_null,
+  "availableForSale": boolean_or_null,
+  "extractedFields": ["list of fields successfully extracted"],
+  "missingFields": ["list of important fields NOT mentioned"]
+}`;
+
+    const response = await askGroq(systemPrompt, `Equipment owner's recording (${language === 'hi' ? 'Hindi' : 'English'}): "${transcript}"`, { json: true, temperature: 0.1 });
+    let parsed = JSON.parse(response);
+
+    // Strict merge: preserve existing non-null fields
+    if (existingListing) {
+      for (const key in existingListing) {
+        const existing = existingListing[key];
+        if (existing !== null && existing !== undefined && existing !== '') {
+          parsed[key] = existing;
+        }
+      }
+    }
+
+    res.json(parsed);
+  } catch (error) {
+    console.error('Equipment listing parse error:', error);
+    res.status(500).json({ error: 'Equipment listing parsing failed', details: error.message });
   }
 });
 

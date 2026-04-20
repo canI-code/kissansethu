@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { getDB } from '../config/db.js';
 import { analyzeProfile, profileQuestions } from '../services/aiService.js';
 import { ObjectId } from 'mongodb';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -11,7 +12,7 @@ router.get('/questions', (req, res) => {
 });
 
 // Create or update farmer profile with AI analysis
-router.post('/', async (req, res) => {
+router.post('/', requireAuth, async (req, res) => {
   try {
     const db = getDB();
     const rawProfile = req.body;
@@ -74,6 +75,106 @@ router.get('/', async (req, res) => {
     res.json(farmers);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch farmers', details: error.message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Worker profile routes (for dual-role system)
+// ---------------------------------------------------------------------------
+
+// GET /api/profile/worker/:userId — get worker profile from users collection
+router.get('/worker/:userId', async (req, res) => {
+  try {
+    const db = getDB();
+    const user = await db.collection('users').findOne({ _id: new ObjectId(req.params.userId) });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.json({ success: true, workerProfile: user.workerProfile || null, userId: user._id });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch worker profile' });
+  }
+});
+
+// PUT /api/profile/worker/:userId — update worker profile
+router.put('/worker/:userId', requireAuth, async (req, res) => {
+  try {
+    const db = getDB();
+    const updates = req.body;
+    await db.collection('users').updateOne(
+      { _id: new ObjectId(req.params.userId) },
+      { $set: { workerProfile: { ...updates, updatedAt: new Date() }, updatedAt: new Date() } }
+    );
+    const user = await db.collection('users').findOne({ _id: new ObjectId(req.params.userId) });
+    res.json({ success: true, workerProfile: user.workerProfile });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update worker profile' });
+  }
+});
+
+// PUT /api/profile/worker/:userId/availability — toggle availability
+router.put('/worker/:userId/availability', requireAuth, async (req, res) => {
+  try {
+    const db = getDB();
+    const { available } = req.body;
+    if (typeof available !== 'boolean') {
+      return res.status(400).json({ success: false, message: '`available` boolean is required' });
+    }
+    await db.collection('users').updateOne(
+      { _id: new ObjectId(req.params.userId) },
+      { $set: { 'workerProfile.available': available, updatedAt: new Date() } }
+    );
+    res.json({ success: true, available, message: available ? 'You are now available' : 'You are now unavailable' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update availability' });
+  }
+});
+
+// GET /api/profile/equipment-owner/:userId — get equipment owner profile
+router.get('/equipment-owner/:userId', async (req, res) => {
+  try {
+    const db = getDB();
+    const user = await db.collection('users').findOne({ _id: new ObjectId(req.params.userId) });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.json({ success: true, equipmentProfile: user.equipmentProfile || null, userId: user._id });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch equipment owner profile' });
+  }
+});
+
+// PUT /api/profile/equipment-owner/:userId — update equipment owner profile
+router.put('/equipment-owner/:userId', requireAuth, async (req, res) => {
+  try {
+    const db = getDB();
+    const updates = req.body;
+    await db.collection('users').updateOne(
+      { _id: new ObjectId(req.params.userId) },
+      { $set: { equipmentProfile: { ...updates, updatedAt: new Date() }, updatedAt: new Date() } }
+    );
+    const user = await db.collection('users').findOne({ _id: new ObjectId(req.params.userId) });
+    res.json({ success: true, equipmentProfile: user.equipmentProfile });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update equipment owner profile' });
+  }
+});
+
+// Generic role profile update — PUT /api/profile/:role/:userId
+// Supports: farmer, worker, equipment_owner
+router.put('/:role/:userId', requireAuth, async (req, res) => {
+  const { role, userId } = req.params;
+  const validRoles = ['farmer', 'worker', 'equipment_owner'];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({ success: false, message: `Invalid role: ${role}` });
+  }
+  const profileKey = role === 'equipment_owner' ? 'equipmentProfile' : `${role}Profile`;
+  try {
+    const db = getDB();
+    await db.collection('users').updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { [profileKey]: { ...req.body, updatedAt: new Date() }, updatedAt: new Date() } }
+    );
+    const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+    res.json({ success: true, profile: user[profileKey] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update profile' });
   }
 });
 

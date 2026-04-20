@@ -4,6 +4,7 @@ import { useLang } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { API } from '../config/constants';
 import { ExternalLink, CheckCircle, AlertTriangle, Info, ChevronRight, User } from 'lucide-react';
+import SpeakableCard from '../components/voice/SpeakableCard';
 
 // Fields needed for scheme eligibility
 const SCHEME_FIELDS = [
@@ -29,7 +30,9 @@ export default function Schemes() {
   const [activeTab, setActiveTab] = useState('eligible');
   const [selectedScheme, setSelectedScheme] = useState(null);
 
-  const profile = farmer?.analyzed || farmer?.profile;
+  // farmer is user.farmerProfile (flat object: { name, location, ... })
+  // Support both the flat profile and the legacy analyzed sub-document shape
+  const profile = farmer?.analyzed || farmer?.profile || farmer || null;
 
   useEffect(() => {
     fetchSchemesAndEligibility();
@@ -83,11 +86,25 @@ export default function Schemes() {
       ? eligibility.almostEligible.find(s => s.id === scheme.id)
       : (isEligible ? eligibility.eligible.find(s => s.id === scheme.id) : scheme);
 
+    // Build text content for TTS
+    const speakText = [
+      lang === 'hi' ? scheme.nameHi : scheme.name,
+      lang === 'hi' ? scheme.descriptionHi : scheme.description,
+      `लाभ: ${scheme.benefits}`,
+      isEligible ? 'आप इस योजना के लिए पात्र हैं' : isAlmost ? 'आप लगभग पात्र हैं' : '',
+      schemeData?.gaps?.length > 0
+        ? `अभी भी चाहिए: ${schemeData.gaps.map(g => lang === 'hi' ? g.messageHi : g.messageEn).join(', ')}`
+        : ''
+    ].filter(Boolean).join('. ');
+
     return (
-      <div 
-        key={scheme.id} 
-        className={`scheme-card ${isEligible ? 'eligible' : isAlmost ? 'almost' : ''}`}
+      <SpeakableCard
+        key={scheme.id}
+        textContent={speakText}
         onClick={() => setSelectedScheme(schemeData)}
+      >
+      <div 
+        className={`scheme-card ${isEligible ? 'eligible' : isAlmost ? 'almost' : ''}`}
         style={{ cursor: 'pointer', marginBottom: '12px' }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
@@ -123,6 +140,7 @@ export default function Schemes() {
           )}
         </div>
       </div>
+      </SpeakableCard>
     );
   };
 

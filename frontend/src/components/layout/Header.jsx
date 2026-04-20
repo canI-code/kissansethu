@@ -2,14 +2,20 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Globe, User, LogOut } from 'lucide-react';
 import { useLang, LANGUAGES } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLocation } from 'react-router-dom';
+import RoleSwitcher from '../auth/RoleSwitcher';
 
 export default function Header() {
   const { lang, setLang, currentLang } = useLang();
   const { user, clearAuth } = useAuth();
+  const location = useLocation();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const menuRef = useRef(null);
   const userMenuRef = useRef(null);
+
+  // Hide header on landing page
+  if (location.pathname === '/' && !user) return null;
 
   // Close menus on outside click
   useEffect(() => {
@@ -35,6 +41,9 @@ export default function Header() {
           <div className="logo-sub">{lang === 'hi' ? 'किसान सेतु — आपका कृषि साथी' : 'Your Farming Companion'}</div>
         </div>
       </div>
+
+      {/* Role Switcher — visible when user has multiple roles */}
+      {user && <RoleSwitcher />}
 
       {/* Multi-language selector dropdown */}
       <div className="lang-selector" ref={menuRef}>
@@ -77,7 +86,7 @@ export default function Header() {
             <div className="user-dropdown">
               <div className="user-info">
                 <div className="user-phone">+91 {user.phone}</div>
-                <div className="user-role">{user.role}</div>
+                <div className="user-role">{user.activeRole || user.role || 'No role set'}</div>
                 <div className={`user-status ${user.isVerified ? 'verified' : 'unverified'}`}>
                   {user.isVerified ? '✓ Verified' : '⚠ Not Verified'}
                 </div>

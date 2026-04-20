@@ -10,6 +10,7 @@ import aiRoutes from './routes/ai.js';
 import bookingsRoutes from './routes/bookings.js';
 import ttsRoutes from './routes/tts.js';
 import authRoutes from './routes/auth.js';
+import callingRoutes from './routes/calling.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/bookings', bookingsRoutes);
 app.use('/api/tts', ttsRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/calling', callingRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -43,7 +45,13 @@ app.use((err, req, res, next) => {
 
 // Seed sample data
 async function seedData() {
-  const db = getDB();
+  let db;
+  try {
+    db = getDB();
+  } catch {
+    console.log('⚠️  Skipping seed — no database connection.');
+    return;
+  }
   
   // Check if already seeded
   const existingEquipment = await db.collection('equipment').countDocuments();

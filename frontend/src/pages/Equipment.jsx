@@ -4,6 +4,7 @@ import { MapPin, Star, Search, Mic, Calendar, Clock, ShoppingCart, RotateCcw, Al
 import { useLang } from '../context/LanguageContext';
 import { API, EQUIPMENT_TYPES } from '../config/constants';
 import { useVoice } from '../hooks/useVoice';
+import SpeakableCard from '../components/voice/SpeakableCard';
 
 export default function Equipment() {
   const { lang, t } = useLang();
@@ -201,7 +202,18 @@ export default function Equipment() {
       ) : (
         <div className="grid-3">
           {equipment.map(item => (
-            <div key={item._id} className="listing-card">
+            <SpeakableCard
+              key={item._id}
+              textContent={[
+                lang === 'hi' ? item.nameHi : item.name,
+                lang === 'hi' ? item.descriptionHi : item.description,
+                `कीमत ${item.price?.toLocaleString()} रुपये ${item.priceUnit === 'per_hour' ? 'प्रति घंटा' : ''}`,
+                `मालिक: ${item.owner}`,
+                `स्थान: ${item.location?.district}`,
+                item.status === 'booked' ? 'अभी किराये पर है' : item.status === 'sold' ? 'बिक चुका है' : 'उपलब्ध है'
+              ].filter(Boolean).join('. ')}
+            >
+            <div className="listing-card">
               <div className="card-emoji" style={{ 
                 opacity: (item.status === 'booked' || item.status === 'sold') ? 0.5 : 1 
               }}>
@@ -265,6 +277,7 @@ export default function Equipment() {
                 )}
               </div>
             </div>
+            </SpeakableCard>
           ))}
         </div>
       )}
