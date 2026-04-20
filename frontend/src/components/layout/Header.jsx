@@ -37,8 +37,8 @@ export default function Header() {
       <div className="logo">
         <span className="logo-icon">🌾</span>
         <div>
-          <div className="logo-text">KissanSetu</div>
-          <div className="logo-sub">{lang === 'hi' ? 'किसान सेतु — आपका कृषि साथी' : 'Your Farming Companion'}</div>
+          <div className="logo-text">KhetSetu</div>
+          <div className="logo-sub">{lang === 'hi' ? 'खेत सेतु — आपका कृषि साथी' : 'Your Farming Companion'}</div>
         </div>
       </div>
 

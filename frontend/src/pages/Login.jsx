@@ -125,7 +125,7 @@ const Login = () => {
       >
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#16a34a', fontWeight: 800 }}>
-            🌾 KissanSetu
+            🌾 KhetSetu
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Voice-First Farmer Platform

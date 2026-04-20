@@ -1,6 +1,6 @@
 # Retell AI Agent Setup Guide
 
-This guide explains how to set up the KissanSetu AI calling agent using Retell AI.
+This guide explains how to set up the KhetSetu AI calling agent using Retell AI.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ node backend/scripts/setupRetellAgent.js
 ```
 
 This script will:
-- Create a Retell LLM with the KissanSetu system prompt (Hindi/English support)
+- Create a Retell LLM with the KhetSetu system prompt (Hindi/English support)
 - Create a Retell Voice Agent using that LLM
 - Attempt to link the agent to your Twilio phone number
 - Print the `RETELL_LLM_ID` and `RETELL_AGENT_ID` to add to `.env`

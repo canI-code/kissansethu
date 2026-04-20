@@ -793,7 +793,7 @@ export default function Profile() {
           </h3>
           <div style={{ width: '100%', overflow: 'hidden', borderRadius: '12px' }}>
             <Calendar 
-               className="kissan-calendar"
+               className="khet-calendar"
                tileClassName={({ date }) => activeDates.includes(date.toDateString()) ? 'booked-day' : null}
                tileContent={({ date, view }) => {
                  if (view === 'month') {
@@ -811,7 +811,7 @@ export default function Profile() {
             />
           </div>
           <style dangerouslySetInnerHTML={{__html: `
-            .kissan-calendar { width: 100%; border: none; font-family: inherit; }
+            .khet-calendar { width: 100%; border: none; font-family: inherit; }
             .react-calendar__tile { padding: 12px 0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 60px; }
             .react-calendar__tile:enabled:hover { background: var(--green-50); border-radius: 8px; }
             .react-calendar__tile--now { background: var(--slate-100); }

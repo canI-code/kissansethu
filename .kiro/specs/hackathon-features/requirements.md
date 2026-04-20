@@ -1,8 +1,8 @@
-# Requirements: KissanSetu Hackathon Features
+# Requirements: KhetSetu Hackathon Features
 
 ## Introduction
 
-KissanSetu (AgriConnect) is a voice-first farming platform for Indian farmers. For the hackathon, three major features need to be implemented on top of the existing working codebase: an AI-powered phone calling agent, a dual-role user system (service consumers vs. service providers), and full voice control across the website. All features must use real API integrations — no dummy data except for payment UI which is display-only.
+KhetSetu (AgriConnect) is a voice-first farming platform for Indian farmers. For the hackathon, three major features need to be implemented on top of the existing working codebase: an AI-powered phone calling agent, a dual-role user system (service consumers vs. service providers), and full voice control across the website. All features must use real API integrations — no dummy data except for payment UI which is display-only.
 
 **Existing stack:** Node.js/Express backend, MongoDB Atlas, React/Vite frontend, Material-UI, Groq AI, edge-tts for TTS, Web Speech API for STT.
 

@@ -126,11 +126,11 @@ router.post('/vapi-webhook', async (req, res) => {
         return res.json({
           assistant: {
             firstMessage:
-              'Namaste! Main KissanSetu AI assistant hoon. Tractor, majdoor, ya sarkari yojana ke baare mein poochein.',
+              'Namaste! Main KhetSetu AI assistant hoon. Tractor, majdoor, ya sarkari yojana ke baare mein poochein.',
             model: {
               provider: 'groq',
               model: 'llama-3.3-70b-versatile',
-              systemPrompt: `You are KissanSetu AI Assistant for Indian farmers. Speak in simple Hindi. Switch to English if caller speaks English. Keep responses SHORT (2-3 sentences) since this is a phone call. Current data:\n${context}`,
+              systemPrompt: `You are KhetSetu AI Assistant for Indian farmers. Speak in simple Hindi. Switch to English if caller speaks English. Keep responses SHORT (2-3 sentences) since this is a phone call. Current data:\n${context}`,
             },
             voice: {
               provider: 'playht',

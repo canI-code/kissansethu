@@ -1,6 +1,6 @@
-# KissanSetu - Farmer Dashboard 🌾
+# KhetSetu - Farmer Dashboard 🌾
 
-KissanSetu is a comprehensive digital platform designed to empower farmers with AI-driven tools, equipment rentals, government scheme information, and worker management.
+KhetSetu is a comprehensive digital platform designed to empower farmers with AI-driven tools, equipment rentals, government scheme information, and worker management.
 
 ## 🚀 Features
 - **AI Assistant**: Intelligent farming advice and voice-controlled interface.
@@ -19,8 +19,8 @@ KissanSetu is a comprehensive digital platform designed to empower farmers with 
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/canI-code/kissansetu-f.git
-cd kissansetu-f
+git clone https://github.com/canI-code/khetsetu-f.git
+cd khetsetu-f
 ```
 
 ### 2. Backend Setup

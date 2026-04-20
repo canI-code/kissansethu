@@ -1,11 +1,11 @@
 /**
- * One-time setup script: Creates (or updates) the KissanSetu Retell AI agent
+ * One-time setup script: Creates (or updates) the KhetSetu Retell AI agent
  * and links it to the Twilio phone number for inbound calls.
  *
  * Run with: node backend/scripts/setupRetellAgent.js
  *
  * What it does:
- *   1. Creates a Retell LLM with the KissanSetu system prompt
+ *   1. Creates a Retell LLM with the KhetSetu system prompt
  *   2. Creates a Retell Voice Agent using that LLM
  *   3. Links the agent to the Twilio phone number (+17179310375) for inbound calls
  *   4. Prints the RETELL_AGENT_ID — add it to backend/.env
@@ -38,9 +38,9 @@ if (!RETELL_API_KEY) {
 }
 
 // ---------------------------------------------------------------------------
-// KissanSetu system prompt for the Retell LLM
+// KhetSetu system prompt for the Retell LLM
 // ---------------------------------------------------------------------------
-const KISSANSETU_SYSTEM_PROMPT = `You are KissanSetu AI Assistant — a helpful phone agent for Indian farmers.
+const KHETSETU_SYSTEM_PROMPT = `You are KhetSetu AI Assistant — a helpful phone agent for Indian farmers.
 
 LANGUAGE RULES:
 - Speak in simple Hindi by default. Use Hinglish (Hindi + English mix) if it sounds more natural.
@@ -69,7 +69,7 @@ Caller: "PM Kisan scheme ke baare mein batao"
 You: "PM Kisan Samman Nidhi mein registered farmers ko har saal 6000 rupaye milte hain. Kya aap already registered hain, ya registration mein madad chahiye?"`;
 
 const BEGIN_MESSAGE =
-  'Namaste! Main KissanSetu AI assistant hoon. Aap tractor, majdoor, ya sarkari yojana ke baare mein pooch sakte hain. Aapki kya madad kar sakta hoon?';
+  'Namaste! Main KhetSetu AI assistant hoon. Aap tractor, majdoor, ya sarkari yojana ke baare mein pooch sakte hain. Aapki kya madad kar sakta hoon?';
 
 // ---------------------------------------------------------------------------
 // Main setup function
@@ -77,7 +77,7 @@ const BEGIN_MESSAGE =
 async function setup() {
   const client = new Retell({ apiKey: RETELL_API_KEY });
 
-  console.log('🌾 KissanSetu — Retell AI Agent Setup');
+  console.log('🌾 KhetSetu — Retell AI Agent Setup');
   console.log('=====================================');
   console.log(`📞 Phone number: ${TWILIO_PHONE_NUMBER}`);
   console.log(`🔑 Retell API key: ${RETELL_API_KEY.slice(0, 12)}...`);
@@ -93,7 +93,7 @@ async function setup() {
     try {
       await client.llm.update(llmId, {
         model: 'gpt-4.1-mini',
-        general_prompt: KISSANSETU_SYSTEM_PROMPT,
+        general_prompt: KHETSETU_SYSTEM_PROMPT,
         begin_message: BEGIN_MESSAGE,
       });
       console.log(`✅ LLM updated: ${llmId}`);
@@ -107,7 +107,7 @@ async function setup() {
     console.log('📝 Creating new Retell LLM...');
     const llm = await client.llm.create({
       model: 'gpt-4.1-mini',
-      general_prompt: KISSANSETU_SYSTEM_PROMPT,
+      general_prompt: KHETSETU_SYSTEM_PROMPT,
       begin_message: BEGIN_MESSAGE,
     });
     llmId = llm.llm_id;
@@ -120,7 +120,7 @@ async function setup() {
   let agentId = EXISTING_AGENT_ID;
 
   const agentConfig = {
-    agent_name: 'KissanSetu AI Assistant',
+    agent_name: 'KhetSetu AI Assistant',
     response_engine: { type: 'retell-llm', llm_id: llmId },
     // Hindi-capable voice — "11labs-Meera" is a natural Hindi female voice on Retell
     voice_id: '11labs-Meera',
@@ -167,7 +167,7 @@ async function setup() {
   try {
     await client.phoneNumber.update(TWILIO_PHONE_NUMBER, {
       inbound_agent_id: agentId,
-      nickname: 'KissanSetu Helpline',
+      nickname: 'KhetSetu Helpline',
     });
     console.log(`✅ Phone number linked to agent`);
   } catch (err) {

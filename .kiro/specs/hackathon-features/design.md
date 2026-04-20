@@ -1,8 +1,8 @@
-# Design Document: KissanSetu Hackathon Features
+# Design Document: KhetSetu Hackathon Features
 
 ## Overview
 
-This design document covers three major features for the KissanSetu (AgriConnect) hackathon project: **AI Calling Agent**, **Dual User Login/Signup System**, and **Full Voice Control**. The platform is a voice-first farming solution built with Node.js/Express backend, MongoDB Atlas, React/Vite frontend, and Material-UI. The design prioritizes real, working implementations with actual API integrations (no dummy data except for payment features which are UI-only demonstrations).
+This design document covers three major features for the KhetSetu (AgriConnect) hackathon project: **AI Calling Agent**, **Dual User Login/Signup System**, and **Full Voice Control**. The platform is a voice-first farming solution built with Node.js/Express backend, MongoDB Atlas, React/Vite frontend, and Material-UI. The design prioritizes real, working implementations with actual API integrations (no dummy data except for payment features which are UI-only demonstrations).
 
 **Hackathon Criteria Focus:**
 - **Implementation Quality**: Clean, maintainable code following existing patterns
@@ -89,7 +89,7 @@ Farmer calls +17179310375
 ### Retell Agent System Prompt Template
 
 ```
-You are KissanSetu AI assistant for Indian farmers. 
+You are KhetSetu AI assistant for Indian farmers. 
 Speak in simple Hindi. Switch to English if the caller speaks English.
 You have access to real-time data:
 - Available equipment: {equipment_list}

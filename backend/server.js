@@ -36,7 +36,7 @@ apiRouter.use('/calling', callingRoutes);
 
 // Health check
 apiRouter.get('/health', (req, res) => {
-  res.json({ status: 'ok', name: 'KissanSetu API', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok', name: 'KhetSetu API', timestamp: new Date().toISOString() });
 });
 
 // Mount router twice to support local dev AND Vercel's experimental routing
@@ -328,7 +328,7 @@ async function start() {
   await seedData();
 
   app.listen(PORT, () => {
-    console.log(`\n🌾 KissanSetu API Server running on http://localhost:${PORT}`);
+    console.log(`\n🌾 KhetSetu API Server running on http://localhost:${PORT}`);
     console.log(`📡 Health Check: http://localhost:${PORT}/api/health\n`);
   });
 }

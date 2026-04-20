@@ -1,4 +1,4 @@
-# Implementation Tasks: KissanSetu Hackathon Features
+# Implementation Tasks: KhetSetu Hackathon Features
 
 ## Task Overview
 
@@ -63,7 +63,7 @@ Three feature tracks, ordered by dependency and hackathon impact:
     - `detectLanguage(text)` — returns 'hi' or 'en' based on script detection
 
 - [x] 8. Configure Retell AI agent
-  - [x] 8.1 Create `backend/scripts/setupRetellAgent.js` — a one-time script that uses Retell API to create/update the agent with the KissanSetu system prompt and links it to the Twilio phone number
+  - [x] 8.1 Create `backend/scripts/setupRetellAgent.js` — a one-time script that uses Retell API to create/update the agent with the KhetSetu system prompt and links it to the Twilio phone number
   - [x] 8.2 Implement the Retell webhook handler in `calling.js` — receives `call_started`, `transcript`, `call_ended` events and responds with agent messages
   - [x] 8.3 Add `RETELL_AGENT_ID` to `.env` after running the setup script
 

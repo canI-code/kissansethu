@@ -46,7 +46,7 @@ export default function Landing() {
             <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>🌱</span>
           </div>
           <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#064e3b', letterSpacing: '-0.5px' }}>
-            Kissan<span style={{ color: '#16a34a' }}>Setu</span>
+            Khet<span style={{ color: '#16a34a' }}>Setu</span>
           </span>
         </div>
         
@@ -145,7 +145,7 @@ export default function Landing() {
                     <div style={{ background: '#22c55e', color: 'white', padding: '4px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px' }}>
                       <span style={{ fontSize: '0.7rem' }}>🌱</span>
                     </div>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#064e3b' }}>KissanSetu</span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#064e3b' }}>KhetSetu</span>
                   </div>
 
                   <div style={{ background: 'linear-gradient(135deg, #16a34a, #15803d)', borderRadius: '20px', padding: '20px', color: 'white', marginBottom: '20px', boxShadow: '0 10px 25px -5px rgba(22, 163, 74, 0.4)' }}>
@@ -438,7 +438,7 @@ export default function Landing() {
 
         <div className="features-container grid-3" style={{}}>
           {[
-            { tag: 'KS', name: 'Early Adopter', role: 'Farmer, Maharashtra', q: "KissanSetu is building the future of farming — connecting farmers with workers and equipment through a simple, voice-enabled platform." },
+            { tag: 'KS', name: 'Early Adopter', role: 'Farmer, Maharashtra', q: "KhetSetu is building the future of farming — connecting farmers with workers and equipment through a simple, voice-enabled platform." },
             { tag: 'BT', name: 'Beta Tester', role: 'Worker, Maharashtra', q: "A platform that truly understands the needs of agricultural workers. Easy to use, available in Hindi and Marathi, and built for rural India." },
             { tag: 'CM', name: 'Community Member', role: 'Equipment Owner, Maharashtra', q: "Finally, a platform where I can list my farming equipment and connect with farmers who need it. Simple, secure, and effective." },
           ].map((t, i) => (
@@ -468,7 +468,7 @@ export default function Landing() {
           <div style={{ flex: 1, padding: '80px 0', zIndex: 10, color: 'white' }}>
             <h2 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '24px', lineHeight: 1.1 }}>Download the App,<br/>Farm Smarter</h2>
             <p style={{ fontSize: '1.1rem', opacity: 0.9, lineHeight: 1.6, marginBottom: '40px', maxWidth: '450px' }}>
-              Get KissanSetu on your phone. Book workers, rent equipment, and manage your farm — all from your pocket. Works offline too!
+              Get KhetSetu on your phone. Book workers, rent equipment, and manage your farm — all from your pocket. Works offline too!
             </p>
             <div style={{ display: 'flex', gap: '16px', marginBottom: '40px' }}>
               <button className="btn-hover" style={{ background: '#0f172a', color: 'white', padding: '14px 28px', borderRadius: '12px', fontWeight: 700, fontSize: '1.05rem', border: '1px solid #334155', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
@@ -502,7 +502,7 @@ export default function Landing() {
 
       {/* ========== NEWSLETTER ========== */}
       <section style={{ padding: '0 48px 100px', maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0f172a', marginBottom: '16px' }}>Stay Updated with <span style={{ color: '#16a34a' }}>KissanSetu News</span></h2>
+        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0f172a', marginBottom: '16px' }}>Stay Updated with <span style={{ color: '#16a34a' }}>KhetSetu News</span></h2>
         <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '40px' }}>Get farming tips, scheme updates, and platform news delivered to your inbox. Join 10,000+ farmers already subscribed.</p>
         
         <div style={{ display: 'flex', gap: '12px', background: 'white', padding: '8px', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0' }}>
@@ -536,7 +536,7 @@ export default function Landing() {
                 <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>🌱</span>
               </div>
               <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white', letterSpacing: '-0.5px' }}>
-                Kissan<span style={{ color: '#22c55e' }}>Setu</span>
+                Khet<span style={{ color: '#22c55e' }}>Setu</span>
               </span>
             </div>
             <p style={{ lineHeight: 1.6, marginBottom: '24px', maxWidth: '300px' }}>
@@ -579,7 +579,7 @@ export default function Landing() {
         </div>
 
         <div style={{ maxWidth: '1400px', margin: '80px auto 0', paddingTop: '32px', borderTop: '1px solid #1e293b', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
-          <p style={{ margin: 0 }}>© 2026 KissanSetu. All rights reserved.</p>
+          <p style={{ margin: 0 }}>© 2026 KhetSetu. All rights reserved.</p>
           <div style={{ display: 'flex', gap: '24px' }}>
             <a href="#" style={{ color: '#94a3b8', textDecoration: 'none' }}>Twitter</a>
             <a href="#" style={{ color: '#94a3b8', textDecoration: 'none' }}>LinkedIn</a>

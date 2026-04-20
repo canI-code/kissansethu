@@ -429,7 +429,7 @@ export default function Home() {
             🌾
           </div>
           <h2 style={{ fontSize: '2rem', fontWeight: '900', color: '#0f172a', marginBottom: '16px', letterSpacing: '-0.5px' }}>
-            {t('KissanSetu में आपका स्वागत है!', 'Welcome to KissanSetu!')}
+            {t('KhetSetu में आपका स्वागत है!', 'Welcome to KhetSetu!')}
           </h2>
           <p style={{ color: '#475569', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '36px' }}>
             {t('शुरू करने के लिए अपनी भूमिका चुनें।', 'Please complete your profile setup to unlock features tailored to farmers, workers, and equipment owners.')}

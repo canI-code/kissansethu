@@ -5,7 +5,7 @@ import path from 'path';
 dotenv.config();
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.DB_NAME || 'kissansetu';
+const dbName = process.env.DB_NAME || 'khetsetu';
 
 async function clearAndSeed() {
   const client = new MongoClient(uri);

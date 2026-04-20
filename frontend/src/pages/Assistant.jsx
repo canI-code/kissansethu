@@ -13,8 +13,8 @@ export default function Assistant() {
     {
       role: 'assistant',
       text: lang === 'hi' 
-        ? 'नमस्ते! 🙏 मैं KissanSetu AI सहायक हूँ। आप मुझसे खेती, योजनाओं, उपकरण, या किसी भी सवाल के बारे में पूछ सकते हैं। बोलकर या लिखकर पूछें!'
-        : 'Hello! 🙏 I\'m KissanSetu AI Assistant. Ask me about farming, schemes, equipment, or any question. Speak or type!'
+        ? 'नमस्ते! 🙏 मैं KhetSetu AI सहायक हूँ। आप मुझसे खेती, योजनाओं, उपकरण, या किसी भी सवाल के बारे में पूछ सकते हैं। बोलकर या लिखकर पूछें!'
+        : 'Hello! 🙏 I\'m KhetSetu AI Assistant. Ask me about farming, schemes, equipment, or any question. Speak or type!'
     }
   ]);
   const [input, setInput] = useState('');
@@ -106,7 +106,7 @@ export default function Assistant() {
             fontSize: '1.3rem'
           }}>🤖</div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '1rem' }}>KissanSetu AI</div>
+            <div style={{ fontWeight: 700, fontSize: '1rem' }}>KhetSetu AI</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--green-600)' }}>
               {t('🟢 ऑनलाइन — हिंदी में बात करें', '🟢 Online — Chat in Hindi or English')}
             </div>

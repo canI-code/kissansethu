@@ -1,8 +1,8 @@
 {
-  "name": "kissansetu-backend",
+  "name": "khetsetu-backend",
   "version": "1.0.0",
   "type": "module",
-  "description": "KissanSetu - Voice-First Farmer Platform Backend",
+  "description": "KhetSetu - Voice-First Farmer Platform Backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -197,10 +197,10 @@ const Signup = () => {
       >
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#16a34a', fontWeight: 800 }}>
-            🌾 KissanSetu
+            🌾 KhetSetu
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Create your account — किसान सेतु से जुड़ें
+            Create your account — खेत सेतु से जुड़ें
           </Typography>
         </Box>
 

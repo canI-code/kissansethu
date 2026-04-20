@@ -96,10 +96,10 @@ const RoleSelector = ({ onRoleSelected, loading = false }) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="h6" gutterBottom>
-        How will you use KissanSetu?
+        How will you use KhetSetu?
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        आप KissanSetu का उपयोग कैसे करेंगे?
+        आप KhetSetu का उपयोग कैसे करेंगे?
       </Typography>
 
       {error && (

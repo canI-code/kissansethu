@@ -13,7 +13,7 @@ import { MongoClient } from 'mongodb';
 dotenv.config({ path: new URL('../.env', import.meta.url).pathname });
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.DB_NAME || 'kissansetu';
+const dbName = process.env.DB_NAME || 'khetsetu';
 
 async function migrate() {
   if (!uri) {
