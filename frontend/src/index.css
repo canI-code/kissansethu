@@ -109,20 +109,13 @@ html {
 }
 
 body {
-  
   font-family: var(--font-primary);
-  background: var(--bg-primary);
+  background-color: var(--slate-50);
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-
-  background-color: var(--slate-50);
-}
-
-body {
-  background-color: var(--slate-50);
 }
 
 #root {
@@ -196,38 +189,37 @@ input, select, textarea {
    ============================================ */
 .card {
   background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: var(--border-light);
+  border: 1px solid var(--slate-200);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
+  border-color: var(--slate-300);
 }
 
 .card-glass {
-  background: var(--bg-glass);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid var(--slate-200);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-green {
-  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  background: var(--green-600);
   color: white;
   border: none;
 }
 
 .card-green:hover {
-  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  background: var(--green-700);
 }
 
 /* ============================================
@@ -378,6 +370,7 @@ input, select, textarea {
    📱 NAVBAR (Bottom) — 7-item scrollable
    ============================================ */
 .navbar {
+  
   position: fixed;
   bottom: 0;
   left: 0;
@@ -393,6 +386,9 @@ input, select, textarea {
   padding: 0 var(--space-4);
   z-index: 100;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 /* Scrollable variant for 7+ items */
@@ -1628,4 +1624,13 @@ input, select, textarea {
 .tab-btn.active .count {
   background: var(--green-100);
   color: var(--green-800);
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    justify-content: center;
+    gap: 60px;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.05);
+  }
 }

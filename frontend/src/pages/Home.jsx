@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Tractor, User, FileText, UserCircle, Bot, Mic, ClipboardList } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import CallingAgentCard from '../components/CallingAgentCard';
@@ -137,42 +137,42 @@ function DemoBanner() {
 function FarmerHome({ t, navigate, farmer }) {
   const quickActions = [
     {
-      emoji: '🚜',
+      icon: <Tractor size={28} strokeWidth={1.5} />,
       label: t('उपकरण किराये पर', 'Rent Equipment'),
       sublabel: t('ट्रैक्टर, हार्वेस्टर, पंप', 'Tractor, Harvester, Pump'),
-      color: '',
+      color: 'blue',
       path: '/equipment',
     },
     {
-      emoji: '👷',
+      icon: <User size={28} strokeWidth={1.5} />,
       label: t('मजदूर खोजें', 'Find Workers'),
       sublabel: t('खेत मजदूर, ऑपरेटर', 'Field Workers, Operators'),
       color: 'orange',
       path: '/workers',
     },
     {
-      emoji: '📋',
+      icon: <ClipboardList size={28} strokeWidth={1.5} />,
       label: t('सरकारी योजनाएं', 'Govt Schemes'),
       sublabel: t('पात्रता जांचें', 'Check Eligibility'),
-      color: 'blue',
+      color: 'purple',
       path: '/schemes',
     },
     {
-      emoji: '👤',
+      icon: <UserCircle size={28} strokeWidth={1.5} />,
       label: t('मेरी प्रोफ़ाइल', 'My Profile'),
       sublabel: t('आवाज या टाइप से भरें', 'Fill via Voice or Type'),
-      color: 'purple',
+      color: 'blue',
       path: '/profile',
     },
     {
-      emoji: '🤖',
+      icon: <Bot size={28} strokeWidth={1.5} />,
       label: t('AI सहायक', 'AI Assistant'),
       sublabel: t('कुछ भी पूछें', 'Ask Anything'),
-      color: '',
+      color: 'purple',
       path: '/assistant',
     },
     {
-      emoji: '🎤',
+      icon: <Mic size={28} strokeWidth={1.5} />,
       label: t('आवाज से चलाएं', 'Voice Control'),
       sublabel: t('बोलकर काम करें', 'Speak to Navigate'),
       color: 'orange',
@@ -228,7 +228,7 @@ function FarmerHome({ t, navigate, farmer }) {
       <div className="grid-2">
         {quickActions.map((action, idx) => (
           <button key={idx} className="big-icon-btn" onClick={() => handleClick(action)}>
-            <div className={`icon-wrapper ${action.color}`}>{action.emoji}</div>
+            <div className={`icon-wrapper ${action.color}`}>{action.icon}</div>
             <div className="label">{action.label}</div>
             <div className="sublabel">{action.sublabel}</div>
           </button>
@@ -302,22 +302,22 @@ function WorkerHome({ t, navigate, user }) {
 
       <div className="grid-2" style={{ marginBottom: '24px' }}>
         <button className="big-icon-btn" onClick={() => navigate('/worker-dashboard')}>
-          <div className="icon-wrapper orange">📋</div>
+          <div className="icon-wrapper orange"><ClipboardList size={28} strokeWidth={1.5} /></div>
           <div className="label">{t('काम के अनुरोध', 'Job Requests')}</div>
           <div className="sublabel">{t('स्वीकार / अस्वीकार करें', 'Accept / Reject')}</div>
         </button>
         <button className="big-icon-btn" onClick={() => navigate('/profile')}>
-          <div className="icon-wrapper purple">👤</div>
+          <div className="icon-wrapper purple"><UserCircle size={28} strokeWidth={1.5} /></div>
           <div className="label">{t('मेरी प्रोफ़ाइल', 'My Profile')}</div>
           <div className="sublabel">{t('कौशल, दर, जानकारी', 'Skills, Rate, Info')}</div>
         </button>
         <button className="big-icon-btn" onClick={() => navigate('/assistant')}>
-          <div className="icon-wrapper">🤖</div>
+          <div className="icon-wrapper blue"><Bot size={28} strokeWidth={1.5} /></div>
           <div className="label">{t('AI सहायक', 'AI Assistant')}</div>
           <div className="sublabel">{t('मदद लें', 'Get Help')}</div>
         </button>
         <button className="big-icon-btn" onClick={() => document.getElementById('voice-fab-btn')?.click()}>
-          <div className="icon-wrapper orange">🎤</div>
+          <div className="icon-wrapper orange"><Mic size={28} strokeWidth={1.5} /></div>
           <div className="label">{t('आवाज कमांड', 'Voice Commands')}</div>
           <div className="sublabel">{t('"available hoon" बोलें', 'Say "available hoon"')}</div>
         </button>
@@ -360,17 +360,17 @@ function EquipmentOwnerHome({ t, navigate, user }) {
 
       <div className="grid-2" style={{ marginBottom: '24px' }}>
         <button className="big-icon-btn" onClick={() => navigate('/equipment')}>
-          <div className="icon-wrapper">🚜</div>
+          <div className="icon-wrapper blue"><Tractor size={28} strokeWidth={1.5} /></div>
           <div className="label">{t('मेरे उपकरण', 'My Equipment')}</div>
           <div className="sublabel">{t('लिस्टिंग देखें', 'View Listings')}</div>
         </button>
         <button className="big-icon-btn" onClick={() => navigate('/profile')}>
-          <div className="icon-wrapper purple">👤</div>
+          <div className="icon-wrapper purple"><UserCircle size={28} strokeWidth={1.5} /></div>
           <div className="label">{t('मेरी प्रोफ़ाइल', 'My Profile')}</div>
           <div className="sublabel">{t('जानकारी अपडेट करें', 'Update Info')}</div>
         </button>
         <button className="big-icon-btn" onClick={() => navigate('/assistant')}>
-          <div className="icon-wrapper">🤖</div>
+          <div className="icon-wrapper orange"><Bot size={28} strokeWidth={1.5} /></div>
           <div className="label">{t('AI सहायक', 'AI Assistant')}</div>
           <div className="sublabel">{t('मदद लें', 'Get Help')}</div>
         </button>
