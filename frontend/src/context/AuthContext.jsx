@@ -2,7 +2,9 @@ import { createContext, useContext, useState, useCallback } from 'react';
 
 const AuthContext = createContext();
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.PROD
+  ? '/api'
+  : 'http://localhost:5000/api';
 
 // ---------------------------------------------------------------------------
 // Helpers

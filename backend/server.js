@@ -316,15 +316,23 @@ async function seedData() {
   console.log(`✅ Seeded ${equipment.length} equipment items and ${workers.length} workers`);
 }
 
-// Start server
+// Start server (local dev only — Vercel uses the exported app via api/index.js)
 async function start() {
   await connectDB();
   await seedData();
-  
+
   app.listen(PORT, () => {
     console.log(`\n🌾 KissanSetu API Server running on http://localhost:${PORT}`);
     console.log(`📡 Health Check: http://localhost:${PORT}/api/health\n`);
   });
 }
 
-start().catch(console.error);
+// Only start the HTTP server when running directly (not imported by Vercel)
+if (process.env.VERCEL !== '1') {
+  start().catch(console.error);
+} else {
+  // On Vercel: connect DB at cold start without blocking
+  connectDB().catch(err => console.error('DB connect error:', err));
+}
+
+export default app;

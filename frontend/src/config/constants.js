@@ -1,4 +1,8 @@
-const API_BASE = 'http://localhost:5000/api';
+// In production (Vercel), the backend is served from the same origin under /api
+// In development, it runs on localhost:5000
+const API_BASE = import.meta.env.PROD
+  ? '/api'
+  : 'http://localhost:5000/api';
 
 export const API = {
   profile: `${API_BASE}/profile`,
