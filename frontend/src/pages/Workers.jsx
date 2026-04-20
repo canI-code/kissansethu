@@ -115,9 +115,14 @@ export default function Workers() {
               <div className="card-emoji" style={{ 
                 background: worker.available 
                   ? 'linear-gradient(135deg, var(--green-50), var(--green-100))' 
-                  : 'linear-gradient(135deg, var(--slate-50), var(--slate-100))' 
+                  : 'linear-gradient(135deg, var(--slate-50), var(--slate-100))',
+                overflow: 'hidden', padding: worker.image?.startsWith('http') ? 0 : undefined
               }}>
-                {worker.image || '👨‍🌾'}
+                {worker.image?.startsWith('http') ? (
+                  <img src={worker.image} alt="worker" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  worker.image || '👨‍🌾'
+                )}
               </div>
               <div className="card-body">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -170,7 +175,13 @@ export default function Workers() {
               <button onClick={() => setSelectedWorker(null)} style={{ fontSize: '1.5rem', color: 'var(--text-muted)' }}>×</button>
             </div>
             <div style={{ textAlign: 'center', margin: '16px 0' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '8px' }}>{selectedWorker.image}</div>
+              <div style={{ fontSize: '3rem', marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
+                {selectedWorker.image?.startsWith('http') ? (
+                  <img src={selectedWorker.image} alt="worker" style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }} />
+                ) : (
+                  selectedWorker.image
+                )}
+              </div>
               <span className={`badge ${selectedWorker.available ? 'badge-green' : 'badge-red'}`} style={{ fontSize: '0.85rem', padding: '4px 12px' }}>
                 {selectedWorker.available ? t('✅ उपलब्ध', '✅ Available') : t('❌ व्यस्त', '❌ Busy')}
               </span>

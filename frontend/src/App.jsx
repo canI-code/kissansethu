@@ -16,6 +16,7 @@ import Assistant from './pages/Assistant';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import WorkerDashboard from './pages/WorkerDashboard';
+import Admin from './pages/Admin';
 
 /**
  * RoleProtectedRoute — wraps ProtectedRoute and additionally checks activeRole.
@@ -69,6 +70,9 @@ export default function App() {
                 </RoleProtectedRoute>
               }
             />
+
+            {/* Hidden admin upload page */}
+            <Route path="/admin" element={<Admin />} />
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

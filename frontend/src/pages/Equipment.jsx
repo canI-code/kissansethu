@@ -215,9 +215,14 @@ export default function Equipment() {
             >
             <div className="listing-card">
               <div className="card-emoji" style={{ 
-                opacity: (item.status === 'booked' || item.status === 'sold') ? 0.5 : 1 
+                opacity: (item.status === 'booked' || item.status === 'sold') ? 0.5 : 1,
+                overflow: 'hidden', padding: item.image?.startsWith('http') ? 0 : undefined
               }}>
-                {item.image || '🚜'}
+                {item.image?.startsWith('http') ? (
+                  <img src={item.image} alt="equipment" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  item.image || '🚜'
+                )}
               </div>
               <div className="card-body">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>

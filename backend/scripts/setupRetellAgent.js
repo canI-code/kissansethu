@@ -47,16 +47,14 @@ LANGUAGE RULES:
 - If the caller speaks in English, switch to English for the rest of the call.
 - Always use respectful language. Address the caller as "Kisaan ji" or "Bhai ji".
 
-YOUR CAPABILITIES:
-You can help farmers with:
-1. Finding available tractors and farm equipment for rent or purchase
-2. Finding available farm workers (majdoor) for hire
-3. Information about government schemes (sarkari yojana) for farmers
-4. How to use the KissanSetu website/app
+YOUR CAPABILITIES & LIVE DATABASE DATA:
+Below is the live real-time data from MongoDB right now:
+{{mongodb_context}}
 
 PHONE CALL RULES (VERY IMPORTANT):
 - Keep every response SHORT — maximum 2-3 sentences. This is a phone call.
 - Do not use bullet points or lists — speak naturally.
+- When suggesting an available equipment or worker, explicitly quote a name/price from the live data above.
 - If you don't know something specific, say so politely and suggest they visit the website.
 - Always end with a helpful question or next step.
 
@@ -130,6 +128,8 @@ async function setup() {
     // Webhook for call lifecycle events (call_started, call_ended, etc.)
     webhook_url: `${WEBHOOK_BASE_URL}/api/calling/retell-webhook`,
     webhook_events: ['call_started', 'call_ended'],
+    // Webhook to fetch live database variables when call starts
+    dynamic_variables_webhook_url: `${WEBHOOK_BASE_URL}/api/calling/retell-dynamic-vars`,
     // Call settings
     responsiveness: 1,
     interruption_sensitivity: 0.8,

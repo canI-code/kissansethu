@@ -187,16 +187,16 @@ const Signup = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #43a047 0%, #1b5e20 100%)',
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         p: 2,
       }}
     >
       <Paper
         elevation={8}
-        sx={{ p: 4, width: '100%', maxWidth: 460, borderRadius: 2 }}
+        sx={{ p: 4, width: '100%', maxWidth: 460, borderRadius: 3, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1" gutterBottom color="primary">
+          <Typography variant="h4" component="h1" gutterBottom sx={{ color: '#16a34a', fontWeight: 800 }}>
             🌾 KissanSetu
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -221,9 +221,9 @@ const Signup = () => {
         {getStepContent(activeStep)}
 
         <Box sx={{ mt: 3, textAlign: 'center' }}>
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="body2" color="text.secondary">
             Already have an account?{' '}
-            <Link to="/login" style={{ color: '#2e7d32', fontWeight: 600 }}>
+            <Link to="/login" style={{ color: '#16a34a', fontWeight: 600, textDecoration: 'none' }}>
               Login
             </Link>
           </Typography>

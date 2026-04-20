@@ -1,4 +1,5 @@
 import React from 'react';
+import './Landing.css';
 import { useNavigate } from 'react-router-dom';
 import { 
   Search, Mic, Globe, Sun, ShieldCheck, Wallet, Navigation, ChevronRight, 
@@ -39,7 +40,7 @@ export default function Landing() {
       `}</style>
 
       {/* ========== HEADER ========== */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 48px', position: 'absolute', width: '100%', zIndex: 50 }}>
+      <header className="header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ background: '#22c55e', color: 'white', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>🌱</span>
@@ -49,10 +50,10 @@ export default function Landing() {
           </span>
         </div>
         
-        <div className="nav-links" style={{ display: 'none' }}>
+        <div className="nav-links mobile-hidden" style={{ display: "flex", gap: "32px" }}>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+        <div className="header-actions">
           <button className="nav-btn" style={{ color: '#475569', cursor: 'pointer', background: 'none', border: 'none', display: 'flex', transition: 'color 0.2s' }}><Search size={20} /></button>
           
           <button style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#dcfce7', color: '#16a34a', padding: '8px 16px', borderRadius: '50px', border: 'none', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', position: 'relative', transition: 'all 0.2s' }}>
@@ -76,23 +77,23 @@ export default function Landing() {
         <div style={{ position: 'absolute', top: '20%', left: '5%', opacity: 0.3, transform: 'rotate(-15deg)', fontSize: '3rem' }}>🌿</div>
         <div style={{ position: 'absolute', bottom: '25%', right: '10%', opacity: 0.5, transform: 'rotate(25deg)', fontSize: '2.5rem' }}>🌱</div>
         
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 1, position: 'relative' }}>
+        <div className="hero-content">
           
           {/* Left Text */}
-          <div style={{ flex: '1', maxWidth: '650px', paddingRight: '40px' }}>
+          <div className="hero-text" style={{ flex: 1 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#dcfce7', color: '#16a34a', padding: '8px 16px', borderRadius: '50px', fontSize: '0.9rem', fontWeight: 600, marginBottom: '32px', boxShadow: '0 4px 12px rgba(22,163,74,0.1)' }}>
               ✨ India's Premier Agricultural Platform
             </div>
 
-            <h1 style={{ fontSize: '4.5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1.1, marginBottom: '24px', letterSpacing: '-1.5px' }}>
+            <h1 className="hero-title">
               Empowering India's Farmers <span className="gradient-text">with Technology</span>
             </h1>
 
-            <p style={{ fontSize: '1.25rem', color: '#475569', lineHeight: 1.6, marginBottom: '48px', maxWidth: '580px' }}>
+            <p className="hero-subtitle">
               Connect with verified agricultural workers, rent modern farming equipment, and boost your productivity — all from one platform built for Indian farmers.
             </p>
 
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '48px', flexWrap: 'wrap' }}>
+            <div className="hero-buttons">
               <button className="btn-hover" onClick={() => navigate('/signup')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#16a34a', color: 'white', padding: '16px 32px', borderRadius: '14px', fontWeight: 700, fontSize: '1.1rem', border: 'none', cursor: 'pointer' }}>
                 Get Started <ArrowRight size={20} />
               </button>
@@ -101,7 +102,7 @@ export default function Landing() {
               </button>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+            <div className="hero-features">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#475569', fontWeight: 600, fontSize: '0.95rem' }}>
                 <ShieldCheck size={20} color="#16a34a" /> Verified Workers
               </div>
@@ -121,7 +122,7 @@ export default function Landing() {
           <div className="float-anim" style={{ flex: '1', display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
             <div style={{ position: 'absolute', top: '10%', right: '-10%', width: '300px', height: '300px', background: '#bbf7d0', filter: 'blur(70px)', zIndex: 0, borderRadius: '50%', opacity: 0.6 }}></div>
             
-            <div style={{ width: '340px', height: '680px', background: '#1e293b', borderRadius: '45px', padding: '12px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px #334155, 30px 40px 60px rgba(0,0,0,0.1)', position: 'relative', transform: 'rotate(6deg)', zIndex: 10 }}>
+            <div style={{ width: "100%", maxWidth: "340px", minWidth: "280px", height: "680px", background: "#1e293b", borderRadius: '45px', padding: '12px', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px #334155, 30px 40px 60px rgba(0,0,0,0.1)', position: 'relative', transform: 'rotate(6deg)', zIndex: 10 }}>
               <div style={{ width: '100%', height: '100%', background: '#f8fafc', borderRadius: '35px', overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
                 {/* Notch */}
                 <div style={{ position: 'absolute', top: 0, width: '100%', height: '26px', display: 'flex', justifyContent: 'center', zIndex: 20 }}>
@@ -205,7 +206,7 @@ export default function Landing() {
           <p style={{ fontSize: '1.15rem', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>Three powerful features designed specifically for Indian agriculture</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+        <div className="features-container grid-3" style={{}}>
           {[
             { icon: <Users size={32} color="#f59e0b" />, title: 'Find Skilled Workers', bg: '#fffbeb', desc: 'Browse verified agricultural workers near you with skills matching your exact needs. Filter by location, skill, rating, and availability.' },
             { icon: <Tractor size={32} color="#3b82f6" />, title: 'Rent Equipment', bg: '#eff6ff', desc: 'Access modern farming equipment at affordable rates. From tractors to seed drills — find what you need, when you need it.' },
@@ -224,7 +225,7 @@ export default function Landing() {
 
       {/* ========== VOICE SHOWCASE SECTION ========== */}
       <section style={{ padding: '100px 48px', background: '#0f172a', color: 'white', overflow: 'hidden' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '80px' }}>
+        <div className="voice-showcase-content" style={{ maxWidth: "1400px", margin: "0 auto", display: "flex", alignItems: "center", gap: "80px", flexWrap: "wrap", justifyContent: "center" }}>
           
           {/* Left info */}
           <div style={{ flex: '1' }}>
@@ -234,7 +235,7 @@ export default function Landing() {
               Our AI Voice Assistant understands Hindi, Marathi & English. No typing needed — simply speak your query and get instant help with farming, weather, prices & more.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '40px' }}>
+            <div className="grid-2" style={{ display: "grid", gap: "20px", marginBottom: "40px" }}>
               {[
                 { e: '🗣️', t: 'Book workers by voice command' },
                 { e: '🌤️', t: 'Get weather updates in your language' },
@@ -261,9 +262,9 @@ export default function Landing() {
           {/* Right Chat Mockup */}
           <div style={{ flex: '1', display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
             {/* Background glow */}
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '400px', height: '400px', background: '#3b82f6', filter: 'blur(100px)', borderRadius: '50%', opacity: 0.3 }}></div>
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: "100%", maxWidth: "400px", height: "400px", background: "#3b82f6", filter: 'blur(100px)', borderRadius: '50%', opacity: 0.3 }}></div>
             
-            <div style={{ width: '400px', background: '#1e293b', borderRadius: '32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', overflow: 'hidden', border: '1px solid #334155', position: 'relative', zIndex: 10 }}>
+            <div style={{ width: "100%", maxWidth: "400px", background: "#1e293b", borderRadius: '32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', overflow: 'hidden', border: '1px solid #334155', position: 'relative', zIndex: 10 }}>
               
               <div style={{ padding: '20px', borderBottom: '1px solid #334155', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -331,7 +332,7 @@ export default function Landing() {
         <h2 style={{ fontSize: '3rem', fontWeight: 900, color: '#0f172a', marginBottom: '20px' }}>Get Started in 4 Simple Steps</h2>
         <p style={{ fontSize: '1.15rem', color: '#64748b', maxWidth: '600px', margin: '0 auto 64px' }}>From registration to verified work — it's that simple</p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '40px', position: 'relative' }}>
+        <div className="how-it-works-container grid-4" style={{ position: "relative" }}>
           {/* Connector line */}
           <div style={{ position: 'absolute', top: '40px', left: '10%', right: '10%', height: '2px', background: '#e2e8f0', zIndex: 0, border: '1px dashed #cbd5e1' }}></div>
           
@@ -362,7 +363,7 @@ export default function Landing() {
             <p style={{ fontSize: '1.15rem', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>Choose a plan that works for you — upgrade anytime</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px', alignItems: 'center' }}>
+          <div className="pricing-container grid-4" style={{ alignItems: "center" }}>
             {/* Basic */}
             <div className="hover-lift" style={{ background: 'white', padding: '40px 32px', borderRadius: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
               <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>Basic</h3>
@@ -435,7 +436,7 @@ export default function Landing() {
           <p style={{ fontSize: '1.15rem', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>Hear what our community has to say</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+        <div className="features-container grid-3" style={{}}>
           {[
             { tag: 'KS', name: 'Early Adopter', role: 'Farmer, Maharashtra', q: "KissanSetu is building the future of farming — connecting farmers with workers and equipment through a simple, voice-enabled platform." },
             { tag: 'BT', name: 'Beta Tester', role: 'Worker, Maharashtra', q: "A platform that truly understands the needs of agricultural workers. Easy to use, available in Hindi and Marathi, and built for rural India." },
@@ -462,7 +463,7 @@ export default function Landing() {
 
       {/* ========== MOBILE APP CTA ========== */}
       <section style={{ padding: '0 48px 100px' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', background: '#064e3b', borderRadius: '40px', display: 'flex', alignItems: 'center', overflow: 'hidden', padding: '0 64px', position: 'relative' }}>
+        <div style={{ maxWidth: "1400px", margin: "0 auto", background: "#064e3b", borderRadius: "40px", display: "flex", alignItems: "center", flexWrap: "wrap", overflow: "hidden", padding: "0 32px", position: "relative" }}>
           
           <div style={{ flex: 1, padding: '80px 0', zIndex: 10, color: 'white' }}>
             <h2 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '24px', lineHeight: 1.1 }}>Download the App,<br/>Farm Smarter</h2>
@@ -527,7 +528,7 @@ export default function Landing() {
 
       {/* ========== FOOTER ========== */}
       <footer style={{ background: '#0f172a', padding: '80px 48px', color: '#94a3b8' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '64px' }}>
+        <div style={{ maxWidth: "1400px", margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "40px" }}>
           
           <div style={{ flex: '2', minWidth: '300px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>

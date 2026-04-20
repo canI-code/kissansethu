@@ -64,6 +64,21 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Update equipment listing
+router.put('/:id', async (req, res) => {
+  try {
+    const db = getDB();
+    const updates = req.body;
+    await db.collection('equipment').updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: updates }
+    );
+    res.json({ success: true, message: 'Equipment updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update equipment', details: error.message });
+  }
+});
+
 // Book equipment (rent or buy)
 router.post('/:id/book', async (req, res) => {
   try {

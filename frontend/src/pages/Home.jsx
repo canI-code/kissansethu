@@ -416,12 +416,17 @@ export default function Home() {
             {t('शुरू करने के लिए अपनी भूमिका चुनें।', 'Please complete your profile setup to get started.')}
           </p>
           <button
-            className="big-icon-btn"
-            style={{ margin: '0 auto', maxWidth: '200px' }}
             onClick={() => navigate('/profile')}
+            style={{ 
+              display: 'inline-flex', alignItems: 'center', gap: '10px',
+              padding: '12px 24px', borderRadius: '30px', 
+              background: '#16a34a', color: 'white', 
+              fontWeight: '600', fontSize: '1.1rem',
+              border: 'none', cursor: 'pointer',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            }}
           >
-            <div className="icon-wrapper">👤</div>
-            <div className="label">{t('प्रोफ़ाइल सेट करें', 'Set Up Profile')}</div>
+            <span>👤</span> {t('प्रोफ़ाइल सेट करें', 'Set Up Profile')}
           </button>
         </div>
       </div>

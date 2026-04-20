@@ -14,9 +14,6 @@ export default function Header() {
   const menuRef = useRef(null);
   const userMenuRef = useRef(null);
 
-  // Hide header on landing page
-  if (location.pathname === '/' && !user) return null;
-
   // Close menus on outside click
   useEffect(() => {
     const handler = (e) => {
@@ -31,6 +28,9 @@ export default function Header() {
     clearAuth();
     setShowUserMenu(false);
   };
+
+  // Hide header on landing page
+  if (location.pathname === '/' && !user) return null;
 
   return (
     <header className="app-header">

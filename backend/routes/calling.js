@@ -83,6 +83,24 @@ router.post('/retell-webhook', async (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// POST /api/calling/retell-dynamic-vars
+//
+// Retell calls this webhook right before the call connects to fetch live DB data
+// and injects it into the LLM system prompt where {{mongodb_context}} is placed.
+// ---------------------------------------------------------------------------
+router.post('/retell-dynamic-vars', async (req, res) => {
+  try {
+    const context = await buildAgentContext();
+    res.json({
+      mongodb_context: context || "No live data available."
+    });
+  } catch (error) {
+    console.error('Retell dynamic vars error:', error);
+    res.status(500).json({ error: 'Failed to fetch dynamic variables' });
+  }
+});
+
+// ---------------------------------------------------------------------------
 // POST /api/calling/vapi-webhook
 //
 // VAPI fallback webhook (if Retell is unavailable or for testing).
